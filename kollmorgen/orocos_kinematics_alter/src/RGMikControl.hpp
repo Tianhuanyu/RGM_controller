@@ -15,12 +15,20 @@
 *
 *4. output
 */
+
+#ifndef KDL_RGM_IK_CTRL
+#define KDL_RGM_IK_CTRL
+
+#ifdef __cplusplus
+
 #include "chain.hpp"
 #include "chain"
 #include "frames.hpp"
 #include "jntarry.hpp"
 #include "RGMcontrol.hpp"
 #include <Eigen/Dense>
+#include "ur5.h"
+#include <vector>
 
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MatrixXq;
 
@@ -29,8 +37,13 @@ typedef struct FRAME{
     float orientation[4] = {0,0,0,0};
 };
 
+
+static std::vector<RGMikCtrl *> RGMikCtrl_Vector;
+
 namespace KDL
 {
+    
+    Chain ur5 = universal_robot5();
     class RGMikCtrl :public RGMctrl
     {
         public:
@@ -96,9 +109,24 @@ namespace KDL
   
     }
 
-
-
-
-
-
 }
+
+#endif
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+void rgm_Ctrl_init_wrap(int* handle);
+
+int get_pos_wrap(int handle,int p1,int p2,int p3,int p4,int p5,int p6,FRAME fr);
+
+int calcuVelocity_wrap(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+
+void rgm_Ctrl_dele_wrap(int* handle);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
