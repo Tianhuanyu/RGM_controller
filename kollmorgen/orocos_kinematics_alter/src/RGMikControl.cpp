@@ -53,7 +53,7 @@ namespace KDL
         //state change step 1
         fksolver.JntToCart(q_actual,X_actual,6);
 
-
+        return 0;
 
         //state change  step 3
         // jnt2jac(actual_position,jac,6);
@@ -106,4 +106,36 @@ namespace KDL
 
 }
 
-int 
+void rgm_Ctrl_init_wrap(int* handle){
+    KDL::RGMtrajCtrl *p = NULL;
+    p = new KDL::RGMikCtrl(ur5);
+
+    RGMikCtrl_Vector.push_back(p);
+
+    *handle = 0;
+
+    return;
+}
+
+int get_pos_ik_wrap(int handle,int p1, int p2,int p3,
+                    int p4,int p5,int p6,FRAME fr){
+    
+    int ret = 0;
+
+    ret = RGMikCtrl_Vector[handle]->get_target(fr,0);
+
+    ret = ret||( RGMikCtrl_Vector[handle]->get_pos(p1,p2,p3,p4,p5,p6,0) );
+
+    return ret;
+
+}
+
+int calcuVelocity_wrap(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+{
+    return RGMikCtrl_Vector[handle]->calcuVelocity(*v1,*v2,*v3,*v4,*v5,*v6,0);
+}
+
+void rgm_Ctrl_dele_wrap(int* handle){
+    RGMikCtrl_Vector.clear();
+    *handle = -1;
+}
