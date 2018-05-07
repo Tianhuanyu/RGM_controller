@@ -516,40 +516,6 @@ static void CheckSDO(CO_Data* d, UNS8 nodeId)
 static int MasterSyncCount = 0;
 void TestMaster_post_TPDO(CO_Data* d)
 {
-	// eprintf("TestMaster_post_TPDO MasterSyncCount = %d \n", MasterSyncCount);
-	// if(MasterSyncCount % 17 == 0){
-	// 	eprintf("Master : Ask RTR PDO (0x1402)\n");
-	// 	sendPDOrequest(&TestMaster_Data, 0x1402 );
-	// 	sendPDOrequest(&TestMaster_Data, 0x1403 );
-	// }
-	// if(MasterSyncCount % 50 == 0){
-	// 	UNS8 transmitiontype;
-	// 	eprintf("Master : Change slave's transmit type to 0xFF\n");
-	// 	transmitiontype = 0xFF;
-	// 	writeNetworkDictCallBack (&TestMaster_Data, /*CO_Data* d*/
-	// 				2, /*UNS8 nodeId*/
-	// 				0x1802, /*UNS16 index*/
-	// 				0x02, /*UNS16 index*/
-	// 				1, /*UNS8 count*/
-	// 				0, /*UNS8 dataType*/
-	// 				&transmitiontype,/*void *data*/
-	// 				CheckSDO, /*SDOCallback_t Callback*/
-    //                 0); /* use block mode */
-	// }   
-	// if(MasterSyncCount % 50 == 25){
-	// 	UNS8 transmitiontype = 0x00;
-	// 	eprintf("Master : Change slave's transmit type to 0x00\n");
-	// 	writeNetworkDictCallBack (&TestMaster_Data, /*CO_Data* d*/
-	// 				2, /*UNS8 nodeId*/
-	// 				0x1802, /*UNS16 index*/
-	// 				0x02, /*UNS16 index*/
-	// 				1, /*UNS8 count*/
-	// 				0, /*UNS8 dataType*/
-	// 				&transmitiontype,/*void *data*/
-	// 				CheckSDO, /*SDOCallback_t Callback*/
-    //                 0); /* use block mode */
-	// }
-	// MasterSyncCount++;
 }
 
 void TestMaster_post_SlaveBootup(CO_Data* d, UNS8 nodeid)

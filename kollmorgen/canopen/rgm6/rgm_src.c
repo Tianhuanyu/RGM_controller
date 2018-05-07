@@ -1,8 +1,6 @@
 #include "rgm_src.h"
 
 
-// RGM rgm_robot[6];
-
 LinkQueue target_queue, actual_queue;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 

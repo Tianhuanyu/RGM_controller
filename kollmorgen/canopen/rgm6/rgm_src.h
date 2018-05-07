@@ -32,19 +32,52 @@ extern "C" {
 #define MOTION_PREPARE 1
 #define MOTION_PLAN 2
 
-typedef struct rgm_motor{
+enum OPERATION_MODE{POSITION_MODE,
+                    VELOCITY_MODE,
+                    TORQUE_MODE};
 
-    INTEGER32* target_position;
-    INTEGER32* target_velocity;
-    INTEGER16* target_torque;
+enum CONTROL_MODE{FRAME_BASE_CONTROL,
+                SCREW_BASE_CONTROL,
+                TWIST_BASE_CONTROL};
 
-    INTEGER32* actual_position;
-    INTEGER32* actual_velocity;
-    INTEGER16* actual_torque;
 
-    INTEGER8* operation_mode;
+typedef struct FRAME{
+    float point[3] = {0,0,0};
+    float orientation[4] = {0,0,0,0};
+} FRAME;
 
-}RGM;
+typedef struct TWIST{
+    float linear[3] = {0,0,0};
+    float angular[3] = {0,0,0};
+} TWIST;
+
+/*Struct for robot hardware interface*/
+
+typedef struct RGM_ROBOT{
+
+    /*push to CANopen slave*/
+    INTEGER32 target_position[6] ={0,0,0,0,0,0};
+    INTEGER32 target_velocity[6] ={0,0,0,0,0,0};
+    INTEGER32 target_torque[6] ={0,0,0,0,0,0};
+
+    /*pull from CANopen slave*/
+    INTEGER32 actual_position[6] ={0,0,0,0,0,0};
+    INTEGER32 actual_velocity[6] ={0,0,0,0,0,0};
+    INTEGER32 actual_torque[6] ={0,0,0,0,0,0};
+
+    OPERATION_MODE operation_mode = VELOCITY_MODE;
+    CONTROL_MODE control_mode = FRAME_BASE_CONTROL;
+
+    /*listen from pc*/
+    FRAME target_tcp_frame;
+    TWIST target_tcp_twist;
+
+    /*report to pc*/
+    FRAME actual_tcp_frame;
+    TWIST actual_tcp_twist;
+    
+} RGM_ROBOT;
+
 typedef struct Node{
     
     INTEGER32 Position[RGM_NUM];
