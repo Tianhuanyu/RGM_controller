@@ -1,0 +1,34 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec628014185/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec628014185.dir/build.make CMakeFiles/cmTryCompileExec628014185.dir/build
+make[1]: Entering directory `/home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec628014185.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec628014185.dir/CheckSymbolExists.c.o   -c /home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec628014185
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec628014185.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec628014185.dir/CheckSymbolExists.c.o  -o cmTryCompileExec628014185 -rdynamic 
+CMakeFiles/cmTryCompileExec628014185.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec628014185] Error 1
+make: *** [cmTryCompileExec628014185/fast] Error 2
+
+File /home/tronlong/kollmorgen_thy/kollmorgen/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

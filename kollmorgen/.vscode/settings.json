@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "master.h": "c",
+        "rgm6.h": "c",
+        "signal.h": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "chrono": "c",
+        "algorithm": "c",
+        "pthread.h": "c",
+        "errno.h": "c",
+        "types.h": "c",
+        "array": "cpp",
+        "rgm_src.h": "c",
+        "*.ipp": "c",
+        "*.tcc": "c",
+        "slist": "c",
+        "ratio": "c",
+        "functional": "c",
+        "typeinfo": "c"
+    }
+}
