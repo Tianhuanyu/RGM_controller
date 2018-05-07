@@ -24,6 +24,10 @@
 
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MatrixXq;
 
+typedef struct FRAME{
+    float point[3] = {0,0,0};
+    float orientation[4] = {0,0,0,0};
+};
 
 namespace KDL
 {
@@ -43,7 +47,7 @@ namespace KDL
     
         virtual int get_tor(const int &t1,const int &t2,const int &t3,const int &t4,const int &t5,const int &t6,const int &flag){return 0;};
     
-    
+        int get_target(const FRAME &fr);
     
     
         /*output*/
@@ -75,6 +79,8 @@ namespace KDL
         Frame X_target;
 
         Frame X_actual;
+
+        ChainIkSolverVel_wdls RGMiksolver;
 
         private:
 

@@ -81,7 +81,7 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
     char sub_buff[100];
     // char sub_buff_v[100];
     // char sub_buff_tm[100];
-    char sub_buff[100];
+    char sub_buff_r[100];
     char *key,*keyp,*keyv,*keyt,*keys;
     
     /*insert a queue*/
@@ -102,10 +102,10 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
             case 80:
                 //position
                 num = 0;
-                strcpy(sub_buff,result);
-                printf("sub_buff = %s\n",sub_buff);
+                strcpy(sub_buff_r,result);
+                printf("sub_buff = %s\n",sub_buff_r);
 
-                sub_result = strtok_r(sub_bufp,delims02,&keyp);
+                sub_result = strtok_r(sub_buff_r,delims02,&keyp);
                 while((sub_result != NULL)&&(num<6)){
                     if(num ==0){
                         //printf("sub_result1 = %s\n",sub_result);
@@ -122,10 +122,10 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
                 break;
             case 86:
                 //velocity
-                strcpy(sub_buff,result);           
+                strcpy(sub_buff_r,result);           
                 //velocity
                 // num = 0;
-                // sub_result = strtok(sub_buff,delims02);
+                // sub_result = strtok(sub_buff_r,delims02);
                 // while((sub_result != NULL)&&(num<6)){
                 //     if(num ==0){
                 //         sub_result = substring(sub_result,2,9);
@@ -139,11 +139,11 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
             case 84:
                 //time
                 //if(*(result+1) == 91)
-                strcpy(sub_buff,result);
+                strcpy(sub_buff_r,result);
 
                 //time
                 num = 0;
-                sub_result = strtok_r(sub_buff,delims02,&keyt);
+                sub_result = strtok_r(sub_buff_r,delims02,&keyt);
                 while((sub_result != NULL)&&(num<6)){
                     if(num ==0){
                         sub_result = substring(sub_result,2,4);

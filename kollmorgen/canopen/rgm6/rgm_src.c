@@ -307,10 +307,10 @@ void tcp_read(LinkQueue *queue,char* recbuf){
     char* result = NULL;
     char* sub_result = NULL;
     int num = 0;
-    char sub_buff_p[100] = "";
-    char sub_buff_v[100] = "";
-    char sub_buff_tq[100] = "";
-    char sub_buff_s[100] = "";
+    char sub_buff_r[100] = "";
+    // char sub_buff_v[100] = "";
+    // char sub_buff_tq[100] = "";
+    // char sub_buff_s[100] = "";
     char sub_buff[100];
     char *key,*key_p,*key_v,*key_tq,*key_s;
     
@@ -336,19 +336,74 @@ void tcp_read(LinkQueue *queue,char* recbuf){
             //num = 0;
             case 112:
                 //position
-                strcpy(sub_buff_p,result);
+                strcpy(sub_buff_r,result);
+                //position
+                num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_p);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+
+                        sub_result = substring(sub_result,2,9);
+
+                    }
+
+                    q->Position[num] = (INTEGER32)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_p);
+                    num = num+1 ;
+                }
                 break;
             case 118:
                 //velocity
-                strcpy(sub_buff_v,result);           
+                strcpy(sub_buff_r,result);
+
+                 num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_v);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        printf("sub_result1 = %s\n",sub_result);
+                        sub_result = substring(sub_result,2,9);
+                        printf("sub_result2 = %s\n",sub_result);
+                    }
+
+                    q->Velocity[num] = (INTEGER32)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_v);
+                    num = num+1 ;
+                }           
                 break;
             case 116:
                 //torque
-                strcpy(sub_buff_tq,result);
+                strcpy(sub_buff_r,result);
+                num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_tq);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        sub_result = substring(sub_result,2,4);
+                    }
+
+                    q->Torque[num] = (INTEGER16)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_tq);
+                    num = num+1 ;
+                }
                 break;
             case 115:
-                strcpy(sub_buff_s,result);
+                strcpy(sub_buff_r,result);
                 //newstate = 1;
+
+                num = 0;
+
+                printf("sub_buff_r = %s\n", sub_buff_r);
+                sub_result = strtok_r(sub_buff_r,delims2,&key_s);
+                printf("sub_result = %s\n", sub_result);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        sub_result = substring(sub_result,2,2);
+                    }
+                    printf("\nsub_result_s = %s\n",sub_result);
+                    q->OperationMode[num] = (INTEGER8)strtol(sub_result,NULL,16); 
+                    
+                    sub_result = strtok_r(NULL,delims2,&key_s);
+                    num = num+1 ;
+                }
                 break;
             default :
                 free(q);
@@ -357,65 +412,7 @@ void tcp_read(LinkQueue *queue,char* recbuf){
             result = strtok_r(NULL,delims1,&key);
             
         }
-        //position
-        num = 0;
-        sub_result = strtok_r(sub_buff_p,delims2,&key_p);
-        while((sub_result != NULL)&&(num<6)){
-            if(num ==0){
-
-                sub_result = substring(sub_result,2,9);
-
-            }
-
-            q->Position[num] = (INTEGER32)strtol(sub_result,NULL,16); 
-            sub_result = strtok_r(NULL,delims2,&key_p);
-            num = num+1 ;
-        }
-        //velocity
-        num = 0;
-        sub_result = strtok_r(sub_buff_v,delims2,&key_v);
-        while((sub_result != NULL)&&(num<6)){
-            if(num ==0){
-                printf("sub_result1 = %s\n",sub_result);
-                sub_result = substring(sub_result,2,9);
-                printf("sub_result2 = %s\n",sub_result);
-            }
-
-            q->Velocity[num] = (INTEGER32)strtol(sub_result,NULL,16); 
-            sub_result = strtok_r(NULL,delims2,&key_v);
-            num = num+1 ;
-        }
-        //torque
-        num = 0;
-        sub_result = strtok_r(sub_buff_tq,delims2,&key_tq);
-        while((sub_result != NULL)&&(num<6)){
-            if(num ==0){
-                sub_result = substring(sub_result,2,4);
-            }
-
-            q->Torque[num] = (INTEGER16)strtol(sub_result,NULL,16); 
-            sub_result = strtok_r(NULL,delims2,&key_tq);
-            num = num+1 ;
-        }
-        //setting
-        num = 0;
-
-        printf("sub_buff_s = %s\n", sub_buff_s);
-        sub_result = strtok_r(sub_buff_s,delims2,&key_s);
-        printf("sub_result = %s\n", sub_result);
-        while((sub_result != NULL)&&(num<6)){
-            if(num ==0){
-                sub_result = substring(sub_result,2,2);
-            }
-            printf("\nsub_result_s = %s\n",sub_result);
-            q->OperationMode[num] = (INTEGER8)strtol(sub_result,NULL,16); 
-            
-            sub_result = strtok_r(NULL,delims2,&key_s);
-            num = num+1 ;
-        }
-
-
-
+      
 
     //change the queue end
     q->next = NULL;

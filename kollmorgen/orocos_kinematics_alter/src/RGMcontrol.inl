@@ -21,8 +21,8 @@ int KDL::RGMctrl::pos_trans(const int& p1,const int& p2,const int& p3,
                 }
                 //((value-position_calibrations[no])/lines_per_round*(2*math.pi)+math.pi)%(2*math.pi)-math.pi
 
-int KDL::RGMctrl::pos_trans(const JntArray& q_in,int p1,int p2,int p3,
-                                                int p4,int p5,int p6)
+int KDL::RGMctrl::pos_trans(const JntArray& q_in,int& p1,int& p2,int& p3,
+                                                int& p4,int& p5,int& p6)
                 {
                     if(q_in.rows()!=6)
                         return(error = E_SIZE_MISMATCH);
@@ -34,6 +34,23 @@ int KDL::RGMctrl::pos_trans(const JntArray& q_in,int p1,int p2,int p3,
                     p5 = int( RGM_LPR*q_in(4)/(2*M_PI) + int(position_calibrations[4])%int(RGM_LPR));
                     p6 = int( RGM_LPR*q_in(5)/(2*M_PI) + int(position_calibrations[5])%int(RGM_LPR));
                    
+                   return 0;
+                        
+                }
+
+int KDL::RGMctrl::vel_trans(const JntArray& qdot_in,int& qd1,int& qd2,int& qd3,
+                                                int& qd4,int& qd5,int& qd6)
+                {
+                    if(qdot_in.rows()!=6)
+                        return(error = E_SIZE_MISMATCH);
+                        
+                        qd1 = qdot_in(0)*RGM_LPR;
+                        qd2 = qdot_in(1)*RGM_LPR;
+                        qd3 = qdot_in(2)*RGM_LPR;
+                        qd4 = qdot_in(3)*RGM_LPR;
+                        qd5 = qdot_in(4)*RGM_LPR;
+                        qd6 = qdot_in(5)*RGM_LPR;    
+                 
                    return 0;
                         
                 }
