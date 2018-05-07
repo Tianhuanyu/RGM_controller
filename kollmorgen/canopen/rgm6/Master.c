@@ -492,6 +492,25 @@ void TestMaster_post_sync(CO_Data* d)
 		
 		}
 
+		if (control_mode == FEEDBACK_CONTROL)
+		{
+			Enter_pvtqueue_Mutex();
+
+			rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
+												ActualPosition3,ActualPosition4,
+												ActualPosition5,ActualPosition6);
+
+			rec_output = calcuVelocity_wrap(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
+										&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
+
+
+			rec_state_change = 0;
+
+			rec_output = 0;
+
+			Leave_pvtqueue_Mutex();
+		}
+
 
 	
 }

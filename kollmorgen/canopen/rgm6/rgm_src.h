@@ -31,6 +31,7 @@ extern "C" {
 #define COMMAND 0
 #define MOTION_PREPARE 1
 #define MOTION_PLAN 2
+#define FEEDBACK_CONTROL 4
 
 enum OPERATION_MODE{POSITION_MODE,
                     VELOCITY_MODE,
@@ -55,15 +56,15 @@ typedef struct TWIST{
 
 typedef struct RGM_ROBOT{
 
-    /*push to CANopen slave*/
-    INTEGER32 target_position[6] ={0,0,0,0,0,0};
-    INTEGER32 target_velocity[6] ={0,0,0,0,0,0};
-    INTEGER32 target_torque[6] ={0,0,0,0,0,0};
+    // /*push to CANopen slave*/
+    // INTEGER32 target_position[6] ={0,0,0,0,0,0};
+    // INTEGER32 target_velocity[6] ={0,0,0,0,0,0};
+    // INTEGER32 target_torque[6] ={0,0,0,0,0,0};
 
-    /*pull from CANopen slave*/
-    INTEGER32 actual_position[6] ={0,0,0,0,0,0};
-    INTEGER32 actual_velocity[6] ={0,0,0,0,0,0};
-    INTEGER32 actual_torque[6] ={0,0,0,0,0,0};
+    // /*pull from CANopen slave*/
+    // INTEGER32 actual_position[6] ={0,0,0,0,0,0};
+    // INTEGER32 actual_velocity[6] ={0,0,0,0,0,0};
+    // INTEGER32 actual_torque[6] ={0,0,0,0,0,0};
 
     OPERATION_MODE operation_mode = VELOCITY_MODE;
     CONTROL_MODE control_mode = FRAME_BASE_CONTROL;
@@ -77,6 +78,8 @@ typedef struct RGM_ROBOT{
     TWIST actual_tcp_twist;
     
 } RGM_ROBOT;
+
+RGM_ROBOT* pRGM;
 
 typedef struct Node{
     

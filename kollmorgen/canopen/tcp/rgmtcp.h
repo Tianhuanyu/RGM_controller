@@ -24,9 +24,12 @@ extern "C"{
 #define SERVER_ADDR     "192.168.1.107"
 #define GET_ARRAY_LEN(array,len) {len = (sizeof(array) / sizeof(array[0]));}
 
+int stop_process(int control_mode);
+
 int read_buff(char* rbuff,int control_mode);
 
 int tcp_process_command(char* inputbuf);
+
 
 int initialisation_mc();
 

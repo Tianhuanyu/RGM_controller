@@ -15,20 +15,11 @@ int tcp_connected = 0;
 const char delims0[] = "\n";
 int handle = -1;
 
+int stop_process(int control_mode){
 
-//0 : no command
-//1 : command
-//2 : shutdown
-
-int tcp_process_command(char* inputbuf){
-
-	// printf("\\*****\\\nRECEIVE:%s\n\\*****\\\n", receivebuf);
-		
-		if(!strncmp(inputbuf,"STOP",4)){ //receive command Start
-
-			ControlWord = SWITCH_ON;
-			strcpy(inputbuf,"");
-			if(control_mode != COMMAND){
+	ControlWord = SWITCH_ON;
+			//strcpy(inputbuf,"");
+			if(control_mode == MOTION_PREPARE)||(control_mode == MOTION_PLAN){
 					
 					control_mode = COMMAND;
 					destory_pvt_queue(&pvt_command_queue);
@@ -39,7 +30,61 @@ int tcp_process_command(char* inputbuf){
 					TargetVelocity5 = 0;
 					TargetVelocity6 = 0;
 				}
+
+			if(control_mode == FEEDBACK_CONTROL){
+					TargetVelocity1 = 0;
+					TargetVelocity2 = 0;
+					TargetVelocity3 = 0;
+					TargetVelocity4 = 0;
+					TargetVelocity5 = 0;
+					TargetVelocity6 = 0;
+
+					rgm_Ctrl_dele_wrap(&handle);
+					control_mode = COMMAND;
+			}
 			return 1;
+
+}
+
+
+//0 : no command
+//1 : command
+//2 : shutdown
+
+int tcp_process_command(char* inputbuf){
+	int ret = 0;
+	// printf("\\*****\\\nRECEIVE:%s\n\\*****\\\n", receivebuf);
+		
+		if(!strncmp(inputbuf,"STOP",4)){ //receive command Start
+
+			// ControlWord = SWITCH_ON;
+			// strcpy(inputbuf,"");
+			// if(control_mode == MOTION_PREPARE)||(control_mode == MOTION_PLAN){
+					
+			// 		control_mode = COMMAND;
+			// 		destory_pvt_queue(&pvt_command_queue);
+			// 		TargetVelocity1 = 0;
+			// 		TargetVelocity2 = 0;
+			// 		TargetVelocity3 = 0;
+			// 		TargetVelocity4 = 0;
+			// 		TargetVelocity5 = 0;
+			// 		TargetVelocity6 = 0;
+			// 	}
+
+			// if(control_mode == FEEDBACK_CONTROL){
+			// 		TargetVelocity1 = 0;
+			// 		TargetVelocity2 = 0;
+			// 		TargetVelocity3 = 0;
+			// 		TargetVelocity4 = 0;
+			// 		TargetVelocity5 = 0;
+			// 		TargetVelocity6 = 0;
+
+			// 		rgm_Ctrl_dele_wrap(&handle);
+			// 		control_mode = COMMAND;
+			//}
+			ret = stop_process(control_mode);
+			strcpy(inputbuf,"");
+			return ret;
         }
 
 		if(!strncmp(inputbuf,"SHUTDOWN",8)){ //receive command Start
@@ -75,6 +120,16 @@ int tcp_process_command(char* inputbuf){
                     
 			return 1;
 		}
+		if(!strncmp(inputbuf,"FRAME_CONTROL",13)){
+		
+			control_mode = FEEDBACK_CONTROL;
+			pRGM->control_mode = FRAME_BASE_CONTROL;
+
+			rgm_Ctrl_init_wrap(&handle);
+        
+			return 1;
+		}
+
 		//return 0;
 
 }
@@ -140,6 +195,16 @@ int read_buff(char* rbuff,int control_mode){
 				strcpy(temp_buff,"");
 				//printf("run to here0 mode = %d \n",control_mode);
 				break;
+
+			case FEEDBACK_CONTROL:
+				if(pRGM == NULL){
+					printf("Error in inialization robot tcp target\n");
+					return -1;
+				}
+				else{
+					fb_tcp_queue(temp_buff);
+					strcpy(temp_buff,"");
+				}
                 
         }
         //Leave_pvtqueue_Mutex();
