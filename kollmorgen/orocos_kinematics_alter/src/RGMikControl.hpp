@@ -22,37 +22,33 @@
 #ifdef __cplusplus
 
 #include "chain.hpp"
-#include "chain"
 #include "frames.hpp"
-#include "jntarry.hpp"
+#include "jntarray.hpp"
 #include "RGMcontrol.hpp"
 #include <Eigen/Dense>
-#include "ur5.h"
+#include "models.hpp"
 #include <vector>
+#include "RGMcontrol.hpp"
+#include "chainiksolvervel_wdls.hpp"
+#include "chainfksolverpos_recursive.hpp"
 
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> MatrixXq;
 
-typedef struct FRAME{
-    float point[3] = {0,0,0};
-    float orientation[4] = {0,0,0,0};
+struct FRAME{
+    float point[3];
+    float orientation[4];
 };
 
-
-static std::vector<RGMikCtrl *> RGMikCtrl_Vector;
 
 namespace KDL
 {
     
-    Chain ur5 = universal_robot5();
     class RGMikCtrl :public RGMctrl
     {
         public:
-        RGMikCtrl(
-            const KDL::Chain& _chain,
-            double _eps =1e-5,
-            double _eps_joints = 1e-5
-            double _alpha = 0.01 
-        );
+            explicit RGMikCtrl(const Chain& _chain,double _eps =1e-5,
+        double _eps_joints = 1e-5,double _alpha = 0.01);
+        ~RGMikCtrl();
         
         virtual int get_pos(const int &p1,const int &p2,const int &p3,const int &p4,const int &p5,const int &p6,const int &flag);
             
@@ -60,13 +56,13 @@ namespace KDL
     
         virtual int get_tor(const int &t1,const int &t2,const int &t3,const int &t4,const int &t5,const int &t6,const int &flag){return 0;};
     
-        int get_target(const FRAME &fr);
+        virtual int get_target(const FRAME &fr,const int& flag);
     
     
         /*output*/
         virtual int calcuPosition(int* p1,int* p2,int* p3,int* p4,int* p5,int* p6){return 0;};
 
-        virtual int calcuVelocity(int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+        virtual int calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6);
 
         virtual int calcuTorque(int* t1,int* t2,int* t3,int* t4,int* t5,int* t6){return 0;};
 
@@ -103,14 +99,16 @@ namespace KDL
         
         MatrixXq jac_inv_persudo;
 
-        MatrixXq jac_singular_persudo;
+        //MatrixXq jac_singular_persudo;
 
         ChainFkSolverPos_recursive fksolver;
   
-    }
+    };
 
 }
 
+static std::vector<KDL::RGMikCtrl *> RGMikCtrl_Vector;
+static KDL::Chain ur5 = KDL::universal_robot5();
 #endif
 
 #ifdef __cplusplus
@@ -119,9 +117,9 @@ extern "C"{
 
 void rgm_Ctrl_init_wrap(int* handle);
 
-int get_pos_wrap(int handle,int p1,int p2,int p3,int p4,int p5,int p6,FRAME fr);
+int get_pos_ik_wrap(int handle,int p1,int p2,int p3,int p4,int p5,int p6,FRAME fr);
 
-int calcuVelocity_wrap(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+int calcuVelocity_wrap_ctrl(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
 
 void rgm_Ctrl_dele_wrap(int* handle);
 

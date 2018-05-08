@@ -86,7 +86,7 @@ namespace KDL{
     /*output*/
     virtual int calcuPosition(int* p1,int* p2,int* p3,int* p4,int* p5,int* p6){return 0;};
 
-    virtual int calcuVelocity(int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+    virtual int calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6);
 
     virtual int calcuTorque(int* t1,int* t2,int* t3,int* t4,int* t5,int* t6){return 0;};
     //a traj solver need tobe added here

@@ -17,6 +17,7 @@
         "slist": "c",
         "ratio": "c",
         "functional": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "testmaster.h": "c"
     }
 }

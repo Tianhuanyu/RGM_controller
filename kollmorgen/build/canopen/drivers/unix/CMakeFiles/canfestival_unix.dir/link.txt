@@ -1,2 +1,2 @@
-/usr/bin/ar cq libcanfestival_unix.a  CMakeFiles/canfestival_unix.dir/unix.c.o CMakeFiles/canfestival_unix.dir/__/timers_unix/timers_unix.c.o
+/usr/bin/ar qc libcanfestival_unix.a  CMakeFiles/canfestival_unix.dir/unix.c.o CMakeFiles/canfestival_unix.dir/__/timers_unix/timers_unix.c.o
 /usr/bin/ranlib libcanfestival_unix.a

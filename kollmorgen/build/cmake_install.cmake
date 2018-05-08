@@ -1,4 +1,4 @@
-# Install script for directory: /home/tronlong/kollmorgen_thy/kollmorgen
+# Install script for directory: /home/thy/app/tronlong/kollmorgen_thy/kollmorgen
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/canopen/cmake_install.cmake")
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/src/cmake_install.cmake")
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/src/utilities/cmake_install.cmake")
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/models/cmake_install.cmake")
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/examples/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/canopen/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/src/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/src/utilities/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/models/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/orocos_kinematics_alter/examples/cmake_install.cmake")
 
 endif()
 
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/tronlong/kollmorgen_thy/kollmorgen/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

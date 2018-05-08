@@ -1,4 +1,4 @@
-# Install script for directory: /home/tronlong/kollmorgen_thy/kollmorgen/canopen/src
+# Install script for directory: /home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

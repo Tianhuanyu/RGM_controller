@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Master.h"
 #include "rgm6.h"
 #include "rgmtcp.h"
+#include "RGMikControl.hpp"
 
 extern s_BOARD MasterBoard;
 int isinit = 0;
@@ -498,9 +499,9 @@ void TestMaster_post_sync(CO_Data* d)
 
 			rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
 												ActualPosition3,ActualPosition4,
-												ActualPosition5,ActualPosition6);
+												ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
 
-			rec_output = calcuVelocity_wrap(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
+			rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
 										&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
 
 

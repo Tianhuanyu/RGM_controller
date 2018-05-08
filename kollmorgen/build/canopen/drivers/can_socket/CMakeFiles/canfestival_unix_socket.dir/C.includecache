@@ -36,7 +36,7 @@ linux/types.h
 stdio.h
 -
 
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/can_socket.c
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/can_socket.c
 stdio.h
 -
 string.h
@@ -48,9 +48,9 @@ stddef.h
 errno.h
 -
 config.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/config.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/config.h
 rtdm/rtcan.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/rtdm/rtcan.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/rtdm/rtcan.h
 unistd.h
 -
 sys/socket.h
@@ -58,11 +58,11 @@ sys/socket.h
 sys/ioctl.h
 -
 linux/can.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/linux/can.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/linux/can.h
 linux/can/raw.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/linux/can/raw.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/linux/can/raw.h
 net/if.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/net/if.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/net/if.h
 can_driver.h
-/home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/can_driver.h
+/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers/can_socket/can_driver.h
 

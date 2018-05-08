@@ -2,6 +2,8 @@
 #include "TestMaster.h"
 #include "pvt_src.h"
 #include "rgm_src.h"
+#include "fb_src.h"
+#include "RGMikControl.hpp"
 
 char receivebuf[BUFFER_SIZE];           // Receive buffer  
 char sendbuf[BUFFER_SIZE];              // Send buffer
@@ -17,9 +19,11 @@ int handle = -1;
 
 int stop_process(int control_mode){
 
+	int ret = 0;
+
 	ControlWord = SWITCH_ON;
 			//strcpy(inputbuf,"");
-			if(control_mode == MOTION_PREPARE)||(control_mode == MOTION_PLAN){
+			if((control_mode == MOTION_PREPARE)||(control_mode == MOTION_PLAN)){
 					
 					control_mode = COMMAND;
 					destory_pvt_queue(&pvt_command_queue);
@@ -40,6 +44,7 @@ int stop_process(int control_mode){
 					TargetVelocity6 = 0;
 
 					rgm_Ctrl_dele_wrap(&handle);
+					free(pRGM);
 					control_mode = COMMAND;
 			}
 			return 1;
@@ -122,6 +127,13 @@ int tcp_process_command(char* inputbuf){
 		}
 		if(!strncmp(inputbuf,"FRAME_CONTROL",13)){
 		
+			pRGM = (RGM_ROBOT*) calloc (1,sizeof(RGM_ROBOT));
+
+			if(pRGM == NULL){
+				printf("No memory to calloc\n");
+				return -1;
+			}
+			
 			control_mode = FEEDBACK_CONTROL;
 			pRGM->control_mode = FRAME_BASE_CONTROL;
 
@@ -202,8 +214,11 @@ int read_buff(char* rbuff,int control_mode){
 					return -1;
 				}
 				else{
-					fb_tcp_queue(temp_buff);
+					rec = fb_tcp_queue(temp_buff);
 					strcpy(temp_buff,"");
+					if(rec != 0){
+					printf("Error in robot tcp target 222\n");	
+					}
 				}
                 
         }

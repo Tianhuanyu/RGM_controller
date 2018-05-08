@@ -33,23 +33,23 @@ extern "C" {
 #define MOTION_PLAN 2
 #define FEEDBACK_CONTROL 4
 
-enum OPERATION_MODE{POSITION_MODE,
+typedef enum OPERATION_MODE{POSITION_MODE,
                     VELOCITY_MODE,
-                    TORQUE_MODE};
+                    TORQUE_MODE}  OPERATION_MODE;
 
-enum CONTROL_MODE{FRAME_BASE_CONTROL,
+typedef enum CONTROL_MODE{FRAME_BASE_CONTROL,
                 SCREW_BASE_CONTROL,
-                TWIST_BASE_CONTROL};
+                TWIST_BASE_CONTROL} CONTROL_MODE;
 
 
 typedef struct FRAME{
-    float point[3] = {0,0,0};
-    float orientation[4] = {0,0,0,0};
+    float point[3];
+    float orientation[3];
 } FRAME;
 
 typedef struct TWIST{
-    float linear[3] = {0,0,0};
-    float angular[3] = {0,0,0};
+    float linear[3];
+    float angular[3];
 } TWIST;
 
 /*Struct for robot hardware interface*/
@@ -66,8 +66,8 @@ typedef struct RGM_ROBOT{
     // INTEGER32 actual_velocity[6] ={0,0,0,0,0,0};
     // INTEGER32 actual_torque[6] ={0,0,0,0,0,0};
 
-    OPERATION_MODE operation_mode = VELOCITY_MODE;
-    CONTROL_MODE control_mode = FRAME_BASE_CONTROL;
+    OPERATION_MODE operation_mode;
+    CONTROL_MODE control_mode;
 
     /*listen from pc*/
     FRAME target_tcp_frame;

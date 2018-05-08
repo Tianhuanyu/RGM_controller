@@ -62,8 +62,8 @@ namespace KDL
              * @param tau_c output tau(current) vector 
              * 
              */
-            virtual int calcuVelocity(int* v1,int* v2,int* v3,
-                                    int* v4,int* v5,int* v6) = 0;
+            virtual int calcuVelocity(int& v1,int& v2,int& v3,
+                                    int& v4,int& v5,int& v6) = 0;
 
             /**
              * @param &q input joint tor
@@ -111,7 +111,7 @@ namespace KDL
                         
                 }
 
-            inline int KDL::RGMctrl::vel_trans(const JntArray& qdot_in,int& qd1,int& qd2,int& qd3,
+            inline int vel_trans(const JntArray& qdot_in,int& qd1,int& qd2,int& qd3,
                                                 int& qd4,int& qd5,int& qd6)
                 {
                     if(qdot_in.rows()!=6)

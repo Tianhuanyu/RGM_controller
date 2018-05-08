@@ -18,17 +18,14 @@
 
 #include "RGMikControl.hpp"
 #include <cmath>
+#include "frames.hpp"
 
 namespace KDL
 {
-    RGMikCtrl(
-            const KDL::Chain& _chain,
-            double _eps =1e-5,
-            double _eps_joints = 1e-5
-            double _alpha = 0.01 
-        ):
+
+        RGMikCtrl::RGMikCtrl(const Chain& _chain,double _eps,double _eps_joints,double _alpha ):
         nj(_chain.getNrOfJoints()),
-        ns(_chain.getNrOfSegments())
+        ns(_chain.getNrOfSegments()),
         jac(nj),
         jnt2jac(_chain),
         fksolver(_chain),
@@ -37,16 +34,19 @@ namespace KDL
         q_actual(6),
         X_actual(Rotation::Identity(),Vector(0,0,1)),
         X_target(Rotation::Identity(),Vector(0,0,1)),
-        jac_inv_persudo(6,6),
-        jac_singular_persudo(1,6),
+        //jac_inv_persudo(6,6),
+        //jac_singular_persudo(1,6),
         RGMiksolver(_chain)
         {
-            jac_inv_persudo = MatrixXq::Identity(6,6);
-            jac_singular_persudo = MatrixXq::Zero(1,6);
-        };
+            //jac_inv_persudo = MatrixXq::Identity(6,6);
+            //jac_singular_persudo = MatrixXq::Zero(1,6);
+        }
+        RGMikCtrl::~RGMikCtrl(){
+
+        }
 
         
-    virtual int get_pos(const int &p1,const int &p2,const int &p3,const int &p4,const int &p5,const int &p6,const int &flag);
+    int RGMikCtrl::get_pos(const int &p1,const int &p2,const int &p3,const int &p4,const int &p5,const int &p6,const int &flag)
     {
         //wait for complete
         RGMctrl::pos_trans(p1,p2,p3,p4,p5,p6,q_actual);
@@ -71,7 +71,7 @@ namespace KDL
         //                 svd.matrixU().transpose();
     }
 
-    virtual int calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6){
+    int RGMikCtrl::calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6){
 
         int ret = 0;
 
@@ -79,26 +79,26 @@ namespace KDL
 
         twist_diff = twist_diff*0.05;
         
-        RGMiksolver.JntToCart(q_actual,twist_diff,output_vel);
+        RGMiksolver.CartToJnt(q_actual,twist_diff,output_vel);
 
         // output
-        ret = RGMctrl::vel_trans(output_vel,v1,v2,v3,v4,v5,v6)
+        ret = RGMctrl::vel_trans(output_vel,v1,v2,v3,v4,v5,v6);
 
         return ret;
 
     }
 
 
-    int get_target(const FRAME& fr,const int& flag){
+    int RGMikCtrl::get_target(const FRAME& fr,const int& flag){
 
-        Vector vec = Vector(fr.position[0],fr.position[1],fr.position[2]);
-        Rotation rot = Quaternion(fr.orientation[0],fr.orientation[1],
+        Vector vec = Vector(fr.point[0],fr.point[1],fr.point[2]);
+        Rotation rot = Rotation::Quaternion(fr.orientation[0],fr.orientation[1],
                                     fr.orientation[2],fr.orientation[3]);
 
          
-        X_target.Frame(Quaternion(fr.orientation[0],fr.orientation[1],
-                                    fr.orientation[2],fr.orientation[3]),
-        Vector(fr.position[0],fr.position[1],fr.position[2]));
+        X_target = Frame(Rotation::Quaternion(fr.orientation[0],fr.orientation[1],
+                                fr.orientation[2],fr.orientation[3]),
+        Vector(fr.point[0],fr.point[1],fr.point[2]));
 
         return 0;      
 
@@ -107,7 +107,7 @@ namespace KDL
 }
 
 void rgm_Ctrl_init_wrap(int* handle){
-    KDL::RGMtrajCtrl *p = NULL;
+    KDL::RGMikCtrl *p = NULL;
     p = new KDL::RGMikCtrl(ur5);
 
     RGMikCtrl_Vector.push_back(p);
@@ -130,12 +130,13 @@ int get_pos_ik_wrap(int handle,int p1, int p2,int p3,
 
 }
 
-int calcuVelocity_wrap(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6);
+int calcuVelocity_wrap_ctrl(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v6)
 {
-    return RGMikCtrl_Vector[handle]->calcuVelocity(*v1,*v2,*v3,*v4,*v5,*v6,0);
+    return RGMikCtrl_Vector[handle]->calcuVelocity(*v1,*v2,*v3,*v4,*v5,*v6);
 }
 
 void rgm_Ctrl_dele_wrap(int* handle){
     RGMikCtrl_Vector.clear();
     *handle = -1;
+    return ;
 }

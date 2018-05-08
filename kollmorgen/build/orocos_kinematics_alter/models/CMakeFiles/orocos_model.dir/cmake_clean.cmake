@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/orocos_model.dir/puma560.cpp.o"
   "CMakeFiles/orocos_model.dir/ur5.cpp.o"
+  "CMakeFiles/orocos_model.dir/puma560.cpp.o"
   "liborocos_model.pdb"
   "liborocos_model.a"
 )

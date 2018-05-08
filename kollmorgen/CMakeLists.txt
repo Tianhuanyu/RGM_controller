@@ -6,15 +6,15 @@ project(kollmorgen)
 
 # cross compiling
 set(cmake_system_name Linux)
-
+set(CMAKE_EIGEN_PATH  /home/thy/app/eigen-eigen-3)
 set(CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
 set(CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
-set(CMAKE_FIND_ROOT_PATH  /home/tronlong/tl/gcc-linaro/arm-linux-gnueabihf/libc)
+set(CMAKE_FIND_ROOT_PATH  /home/thy/app/gcc-arm-linux/libc)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-include_directories(${CMAKE_FIND_ROOT_PATH}/eigen3)
+include_directories(${CMAKE_EIGEN_PATH})
 
 # set(EIGEN_INL /usr/include/eigen3)
 # include_directories(${EIGEN_INL})

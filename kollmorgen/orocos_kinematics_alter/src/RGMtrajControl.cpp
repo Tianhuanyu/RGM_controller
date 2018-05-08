@@ -215,7 +215,7 @@ namespace KDL {
     * 
     */
 
-    int RGMtrajCtrl::calcuVelocity(int* v1,int* v2,int* v3,int* v4,int* v5,int* v6) {
+    int RGMtrajCtrl::calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6) {
         
         const int kp = 0;
         if(step < max_step){
@@ -227,12 +227,12 @@ namespace KDL {
             
             step++;
 
-            *v1 = (0x15)*(0x3E8)*(int32_t)Vel_fb(0);
-            *v2 = (0x15)*(0x3E8)*(int32_t)Vel_fb(1);
-            *v3 = (0x15)*(0x3E8)*(int32_t)Vel_fb(2);
-            *v4 = (0x15)*(0x3E8)*(int32_t)Vel_fb(3);
-            *v5 = (0x15)*(0x3E8)*(int32_t)Vel_fb(4);
-            *v6 = (0x15)*(0x3E8)*(int32_t)Vel_fb(5);
+            v1 = (0x15)*(0x3E8)*(int32_t)Vel_fb(0);
+            v2 = (0x15)*(0x3E8)*(int32_t)Vel_fb(1);
+            v3 = (0x15)*(0x3E8)*(int32_t)Vel_fb(2);
+            v4 = (0x15)*(0x3E8)*(int32_t)Vel_fb(3);
+            v5 = (0x15)*(0x3E8)*(int32_t)Vel_fb(4);
+            v6 = (0x15)*(0x3E8)*(int32_t)Vel_fb(5);
 
             
 
@@ -244,20 +244,20 @@ namespace KDL {
             if(pNode_now == NULL){
                     std::cout<<"There is no data"<<"\n"<<std::endl;
                     
-                    *v1 = 0;
-                    *v2 = 0;
-                    *v3 = 0;
-                    *v4 = 0;
-                    *v5 = 0;
-                    *v6 = 0;
+                    v1 = 0;
+                    v2 = 0;
+                    v3 = 0;
+                    v4 = 0;
+                    v5 = 0;
+                    v6 = 0;
                     
                     return -1;
                 }
             else{
                     std::cout<<"pNode_now->Count = "<<pNode_now->Count<<"\n"<<std::endl;
                     
-                    std::cout<<"v1,v2,v3 step, max_step= "<<*v1<<" "<<*v2
-                    <<" "<<*v3<<" "<<step<<" "<<max_step<<"\n"<<std::endl;
+                    std::cout<<"v1,v2,v3 step, max_step= "<<v1<<" "<<v2
+                    <<" "<<v3<<" "<<step<<" "<<max_step<<"\n"<<std::endl;
                     pNode_now = pNode_now->next;
                     return 1;
                     //RGMtrajCtrl::SetTrajProfile();
@@ -307,7 +307,7 @@ int calcuVelocity_wrap(int handle,int* v1,int* v2,int* v3,int* v4,int* v5,int* v
     //int ret = -1;
     // ret = trajSolver.calcuVelocity(v1,v2,v3,v4,v5,v6);
     // return ret;
-    return RGMtrajCtrl_Vector[handle]->calcuVelocity(v1,v2,v3,v4,v5,v6);
+    return RGMtrajCtrl_Vector[handle]->calcuVelocity(*v1,*v2,*v3,*v4,*v5,*v6);
 }
 
 

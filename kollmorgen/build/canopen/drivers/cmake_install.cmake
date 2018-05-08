@@ -1,4 +1,4 @@
-# Install script for directory: /home/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers
+# Install script for directory: /home/thy/app/tronlong/kollmorgen_thy/kollmorgen/canopen/drivers
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,8 +34,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/canopen/drivers/unix/cmake_install.cmake")
-  include("/home/tronlong/kollmorgen_thy/kollmorgen/build/canopen/drivers/can_socket/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/canopen/drivers/unix/cmake_install.cmake")
+  include("/home/thy/app/tronlong/kollmorgen_thy/kollmorgen/build/canopen/drivers/can_socket/cmake_install.cmake")
 
 endif()
 

@@ -1,4 +1,4 @@
-# Install script for directory: /home/tronlong/kollmorgen_thy/kollmorgen/orocos_kinematics_alter/examples
+# Install script for directory: /home/thy/app/tronlong/kollmorgen_thy/kollmorgen/orocos_kinematics_alter/examples
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

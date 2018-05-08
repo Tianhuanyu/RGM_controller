@@ -1,2 +1,2 @@
-/usr/bin/ar cq libtcp.a  CMakeFiles/tcp.dir/rgmtcp.c.o
+/usr/bin/ar qc libtcp.a  CMakeFiles/tcp.dir/rgmtcp.c.o
 /usr/bin/ranlib libtcp.a

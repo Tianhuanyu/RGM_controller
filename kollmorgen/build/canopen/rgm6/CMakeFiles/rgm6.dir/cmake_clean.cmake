@@ -1,10 +1,11 @@
 file(REMOVE_RECURSE
   "CMakeFiles/rgm6.dir/rgm6.c.o"
-  "CMakeFiles/rgm6.dir/getopt.c.o"
-  "CMakeFiles/rgm6.dir/pvt_src.c.o"
   "CMakeFiles/rgm6.dir/Master.c.o"
-  "CMakeFiles/rgm6.dir/rgm_src.c.o"
+  "CMakeFiles/rgm6.dir/pvt_src.c.o"
   "CMakeFiles/rgm6.dir/TestMaster.c.o"
+  "CMakeFiles/rgm6.dir/rgm_src.c.o"
+  "CMakeFiles/rgm6.dir/getopt.c.o"
+  "CMakeFiles/rgm6.dir/fb_src.c.o"
   "librgm6.pdb"
   "librgm6.a"
 )
