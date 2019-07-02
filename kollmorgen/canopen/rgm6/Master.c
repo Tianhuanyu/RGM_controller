@@ -34,6 +34,16 @@ const char end_request[] = "PVT_FINISHED\n";
 
 long long time_now = 0,time_last=0,time_use=0;
 struct timeval tv;
+
+//这个函数连续调用会记录时间
+long long time_escape_cal(timeval* tv)
+{
+				gettimeofday(tv,NULL);
+				time_last = time_now;
+				time_now = 1000000*tv.tv_sec+tv.tv_usec;
+				time_use=time_now-time_last;
+				return time_use
+}
 /*****************************************************************************/
 void TestMaster_heartbeatError(CO_Data* d, UNS8 heartbeatID)
 {
@@ -381,20 +391,21 @@ void TestMaster_post_sync(CO_Data* d)
 	int position_sum = 0;
 	if ((display == 1)&&(count < 30))
 	{
-		//eprintf("Position3 : %8.8ld  Velocity3 : %8.8ld  ActualTorque3 : %8.8ld\n", ActualPosition3, ActualVelocity3, ActualTorque3);
+		
 	}
-	//eprintf("Position3 : %8.8ld  Velocity3 : %8.8ld  ActualTorque3 : %8.8ld\n", ActualPosition3, ActualVelocity3, ActualTorque3);
-	// eprintf("AP6 : %d    AP5 : %d    AP4 : %d    AP3 : %d    AP2 : %d    AP1 : %d\n" , ActualPostion6,ActualPostion5,ActualPostion4,ActualPostion3,ActualPostion2,ActualPostion1);
+
+	// 实时驱动代码部分： 主要分为轨迹规划与拖动控制部分
 	switch(isinit){
 		case 0 :
+		// 判断机械臂是否在正常工作区域启动
 			if (
 				 (ActualPosition1<0x100000)&&(ActualPosition1>0x0)&&
 				 (ActualPosition2<0x100000)&&(ActualPosition2>0x0)&&
 				(ActualPosition3<0x100000)&&(ActualPosition3>0x0)&&
 				 (ActualPosition4<0x100000)&&(ActualPosition4>0x0)&&
 				 (ActualPosition5<0x100000)&&(ActualPosition5>0x0)&&
-				 //(ActualPosition6<0x100000)&&(ActualPosition6>0x0)&&
-				(1)
+				 (ActualPosition6<0x100000)&&(ActualPosition6>0x0)
+				//(1)
 			)
 			{
 				// EnterMutex();
@@ -411,7 +422,8 @@ void TestMaster_post_sync(CO_Data* d)
 			}
 			else
 			printf("ERROR:WRONG WORK AREA!!!!\n");
-			break;		
+			break;
+		//启动过程		
 		case 1 :
 			// EnterMutex();
 			ControlWord = SWITCH_ON;
@@ -429,92 +441,87 @@ void TestMaster_post_sync(CO_Data* d)
 		default :
 			break;
 		}
-
-	// REPORT TO PC
 	
 		canopen_queue();
 		if(count == 100){
 			count = 0;
 			//printf("TargetPosition1,ActualTar = %x,%x\n",TargetPosition1,ActualPosition1);
-		
-			gettimeofday(&tv,NULL);
-			time_last = time_now;
-			time_now = 1000000*tv.tv_sec+tv.tv_usec;
-			time_use=time_now-time_last;
-			//printf("time_use = %lld\n",time_use);
+			//记录时间函数
+				// gettimeofday(&tv,NULL);
+				// time_last = time_now;
+				// time_now = 1000000*tv.tv_sec+tv.tv_usec;
+				// time_use=time_now-time_last;
+				time_use = time_escape_cal(&tv)
+				printf("time_use = %lld\n",*time_use);
+				
 			}
    			
 
-	//manage pvt_command
-	if(control_mode == MOTION_PLAN){
-		Enter_pvtqueue_Mutex();
-		rec_state_change = get_pos_wrap(handle,ActualPosition1,ActualPosition2,
-										ActualPosition3,ActualPosition4,
-										ActualPosition5,ActualPosition6,rec_output);
-		
-		/*calculate velocity*/
-		rec_output = calcuVelocity_wrap(handle,&TargetVelocity1,&TargetVelocity2,
-											&TargetVelocity3,&TargetVelocity4,
-											&TargetVelocity5,&TargetVelocity6);
-		switch(rec_output){
-			case 0 :
-				break;
-			case 1 :
-
-				/*read actual position to calculate fedposition*/
-				break;
-			case -1 :
-				printf("PVT_QUEUE_FINISHED!!\n");
-
-				position_sum = ActualPosition1 - position_sum;
-
-				printf("position_sum = %x\n", position_sum);
-
-		        /*pop out traj control method*/
-				trajCtrlDele_wrap(&handle);
-
-
-				/*send end request*/
-				if((rec_output=send(sock_fd,end_request,strlen(end_request),MSG_NOSIGNAL)) < 0){
-                                printf("ERROR:Fail to send string\n");
-                                close(sock_fd);
-                                //exit(1);
-                                tcp_connected = 0;
-                                //return 0;
-                            }
-				rec_output = 0;
-				rec_state_change = 0;
-				
-				/*destroy pvt command message queue from phy*/
-				destory_pvt_queue(&pvt_command_queue);
-				control_mode = COMMAND;
-				break;			
-			}
-		Leave_pvtqueue_Mutex();
-		
-		}
-
-		if (control_mode == FEEDBACK_CONTROL)
-		{
-			Enter_pvtqueue_Mutex();
-
-			rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
-												ActualPosition3,ActualPosition4,
-												ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
-
-			rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
-										&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
-
-
-			rec_state_change = 0;
-
-			rec_output = 0;
-
-			Leave_pvtqueue_Mutex();
-		}
-
-
 	
+		switch(control_mode){
+			//MOTION_PLAN 部分 采用消息队列机制
+			case MOTION_PLAN:
+				Enter_pvtqueue_Mutex();
+				// //此处封装成C++ 函数比较冗余 需要重构
+				rec_state_change = get_pos_wrap(handle,ActualPosition1,ActualPosition2,
+												ActualPosition3,ActualPosition4,
+												ActualPosition5,ActualPosition6,rec_output);
+				// /*计算速度 封装函数*/
+				rec_output = calcuVelocity_wrap(handle,&TargetVelocity1,&TargetVelocity2,
+													&TargetVelocity3,&TargetVelocity4,
+													&TargetVelocity5,&TargetVelocity6);
+
+						
+				switch(rec_output){
+					case 0 :
+						break;
+					case 1 :
+						/*read actual position to calculate fedposition*/
+						break;
+					case -1 :
+						printf("PVT_QUEUE_FINISHED!!\n");
+						position_sum = ActualPosition1 - position_sum;
+						printf("position_sum = %x\n", position_sum);
+						/*pop out traj control method*/
+						trajCtrlDele_wrap(&handle);
+						/*send end request*/
+						if((rec_output=send(sock_fd,end_request,strlen(end_request),MSG_NOSIGNAL)) < 0){
+										printf("ERROR:Fail to send string\n");
+										close(sock_fd);
+										//exit(1);
+										tcp_connected = 0;
+										//return 0;
+									}
+						rec_output = 0;
+						rec_state_change = 0;
+						
+						/*destroy pvt command message queue from phy*/
+						destory_pvt_queue(&pvt_command_queue);
+						control_mode = COMMAND;
+						break;			
+					}
+				Leave_pvtqueue_Mutex();
+				
+			break;
+			// 反馈控制——拖动部分
+			case FEEDBACK_CONTROL:
+				Enter_pvtqueue_Mutex();
+				rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
+													ActualPosition3,ActualPosition4,
+													ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
+				rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
+											&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
+				rec_state_change = 0;
+				rec_output = 0;
+				Leave_pvtqueue_Mutex();
+			break;
+
+			default:
+			break;
+		
+		}
+
+		
 }
 
 void TestMaster_post_emcy(CO_Data* d, UNS8 nodeID, UNS16 errCode, UNS8 errReg)

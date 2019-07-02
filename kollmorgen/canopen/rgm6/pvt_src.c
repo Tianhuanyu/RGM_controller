@@ -99,6 +99,7 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
     while(result != NULL){
         switch(*result){
             //num = 0;
+            //当开头为P 时，代表该段为位置
             case 80:
                 //position
                 num = 0;

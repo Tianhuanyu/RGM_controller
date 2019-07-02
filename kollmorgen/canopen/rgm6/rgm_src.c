@@ -13,17 +13,16 @@ char* substring(char* ch,int pos,int length)
 {  
     char* pch=ch;
     //int length = sizeof(ch);
-//定义一个字符指针，指向传递进来的ch地址。  
+
     char* subch=(char*)calloc(sizeof(char),length+1);  
-//通过calloc来分配一个length长度的字符数组，返回的是字符指针。  
+
     int i;  
-//只有在C99下for循环中才可以声明变量，这里写在外面，提高兼容性。  
+
     pch=pch+pos;  
-//是pch指针指向pos位置。  
+
     for(i=0;i<length;i++)  
     {  
-        subch[i]=*(pch++);  
-//循环遍历赋值数组。  
+        subch[i]=*(pch++);    
     }  
     subch[length]='\0';//加上字符串结束符。  
     return subch;       //返回分配的字符数组地址。  
@@ -248,6 +247,7 @@ void read_queue(LinkQueue *queue){
 }
 
 //canopen queue process
+//在程序中的canopen队列处理函数，负责把AP AV发送到上位机
 void canopen_queue(void){
     int numt = 0;
     Enter_queue_Mutex();
@@ -267,8 +267,6 @@ void canopen_queue(void){
                 tcp_connected = 0;
                 return;
                 }
-    
-	//printf("have sent 3%d\n",sock_fd);
 }
 
 //tcp queue process

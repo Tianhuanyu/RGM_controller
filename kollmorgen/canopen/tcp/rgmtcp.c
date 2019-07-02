@@ -62,31 +62,7 @@ int tcp_process_command(char* inputbuf){
 		
 		if(!strncmp(inputbuf,"STOP",4)){ //receive command Start
 
-			// ControlWord = SWITCH_ON;
-			// strcpy(inputbuf,"");
-			// if(control_mode == MOTION_PREPARE)||(control_mode == MOTION_PLAN){
-					
-			// 		control_mode = COMMAND;
-			// 		destory_pvt_queue(&pvt_command_queue);
-			// 		TargetVelocity1 = 0;
-			// 		TargetVelocity2 = 0;
-			// 		TargetVelocity3 = 0;
-			// 		TargetVelocity4 = 0;
-			// 		TargetVelocity5 = 0;
-			// 		TargetVelocity6 = 0;
-			// 	}
-
-			// if(control_mode == FEEDBACK_CONTROL){
-			// 		TargetVelocity1 = 0;
-			// 		TargetVelocity2 = 0;
-			// 		TargetVelocity3 = 0;
-			// 		TargetVelocity4 = 0;
-			// 		TargetVelocity5 = 0;
-			// 		TargetVelocity6 = 0;
-
-			// 		rgm_Ctrl_dele_wrap(&handle);
-			// 		control_mode = COMMAND;
-			//}
+	
 			ret = stop_process(control_mode);
 			strcpy(inputbuf,"");
 			return ret;
@@ -146,6 +122,7 @@ int tcp_process_command(char* inputbuf){
 
 }
 
+// 处理TCP上的发送消息，进行接收
 int read_buff(char* rbuff,int control_mode){
     //1.split rbuff with \n
     //2.rbuff write
@@ -186,6 +163,7 @@ int read_buff(char* rbuff,int control_mode){
 		printf("result,control_mode,isEmpty= %d,%d.%d\n",rec,control_mode,isEmpty(target_queue));
 		//process_data
 		printf("\nrun to here0 mode = %d \n\n",control_mode);
+		//切换控制方式
 		switch(control_mode)
         {
             case MOTION_PREPARE:
@@ -214,7 +192,8 @@ int read_buff(char* rbuff,int control_mode){
 					return -1;
 				}
 				else{
-					rec = fb_tcp_queue(temp_buff);
+					//rec = fb_tcp_queue(temp_buff);
+					rec = 0;
 					strcpy(temp_buff,"");
 					if(rec != 0){
 					printf("Error in robot tcp target 222\n");	
