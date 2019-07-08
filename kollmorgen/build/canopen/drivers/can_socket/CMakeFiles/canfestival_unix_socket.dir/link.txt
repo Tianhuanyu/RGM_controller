@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcanfestival_unix_socket.a  CMakeFiles/canfestival_unix_socket.dir/can_socket.c.o
-/usr/bin/ranlib libcanfestival_unix_socket.a

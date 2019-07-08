@@ -16,7 +16,7 @@ extern "C" {
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
-#include "rgmtcp.h"
+//#include "rgmtcp.h"
 #include "Master.h"
 #include "pvt_src.h"
 
@@ -87,7 +87,6 @@ typedef struct Node{
     INTEGER32 Velocity[RGM_NUM];
     INTEGER16 Torque[RGM_NUM];
     INTEGER8 OperationMode[RGM_NUM];
-
     struct Node *next;
 }Node, *Queue;
 //queue of struct & nest
@@ -114,11 +113,7 @@ void Enter_queue_Mutex(void);
 void Leave_queue_Mutex(void);
 
 void canopen_queue(void);
-void command_tcp_queue(char* recbuf);
 
-void tcp_read(LinkQueue *queue,char* recbuf);
-
-void tcp_write(LinkQueue *queue);
 
 
 extern LinkQueue target_queue, actual_queue;

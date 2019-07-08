@@ -33,16 +33,16 @@ int step_pvt = 0;
 const char end_request[] = "PVT_FINISHED\n";
 
 long long time_now = 0,time_last=0,time_use=0;
-struct timeval tv;
-
+typedef struct timeval Timev;
+Timev tv;
 //这个函数连续调用会记录时间
-long long time_escape_cal(timeval* tv)
+long long time_escape_cal(Timev* tv)
 {
 				gettimeofday(tv,NULL);
 				time_last = time_now;
-				time_now = 1000000*tv.tv_sec+tv.tv_usec;
+				time_now = 1000000*tv->tv_sec+tv->tv_usec;
 				time_use=time_now-time_last;
-				return time_use
+				return time_use;
 }
 /*****************************************************************************/
 void TestMaster_heartbeatError(CO_Data* d, UNS8 heartbeatID)
@@ -451,8 +451,8 @@ void TestMaster_post_sync(CO_Data* d)
 				// time_last = time_now;
 				// time_now = 1000000*tv.tv_sec+tv.tv_usec;
 				// time_use=time_now-time_last;
-				time_use = time_escape_cal(&tv)
-				printf("time_use = %lld\n",*time_use);
+				time_use = time_escape_cal(&tv);
+				printf("time_use = %lld\n",time_use);
 				
 			}
    			

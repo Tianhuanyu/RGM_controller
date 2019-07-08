@@ -18,6 +18,7 @@ extern "C"{
 #include <netdb.h>  
 #include <arpa/inet.h> 
 #include <pthread.h>
+#include "rgm_src.h"
 
 #define PORT            2040
 #define BUFFER_SIZE     8001
@@ -30,8 +31,14 @@ int read_buff(char* rbuff,int control_mode);
 
 int tcp_process_command(char* inputbuf);
 
-
 int initialisation_mc();
+
+void tcp_read(LinkQueue *queue,char* recbuf);
+
+void tcp_write(LinkQueue *queue);
+
+void command_tcp_queue(char* recbuf);
+
 
 extern int tcp_connected;
 extern int sock_fd;

@@ -17,6 +17,9 @@ int tcp_connected = 0;
 const char delims0[] = "\n";
 int handle = -1;
 
+const char delims1[] = {";"};
+const char delims2[] = {","};
+
 int stop_process(int control_mode){
 
 	int ret = 0;
@@ -101,28 +104,11 @@ int tcp_process_command(char* inputbuf){
                     
 			return 1;
 		}
-		if(!strncmp(inputbuf,"FRAME_CONTROL",13)){
-		
-			pRGM = (RGM_ROBOT*) calloc (1,sizeof(RGM_ROBOT));
 
-			if(pRGM == NULL){
-				printf("No memory to calloc\n");
-				return -1;
-			}
-			
-			control_mode = FEEDBACK_CONTROL;
-			pRGM->control_mode = FRAME_BASE_CONTROL;
-
-			rgm_Ctrl_init_wrap(&handle);
-        
-			return 1;
-		}
-
-		//return 0;
 
 }
 
-// 处理TCP上的发送消息，进行接收
+// 处理TCP上的发送消息，TCP 线程循环函数
 int read_buff(char* rbuff,int control_mode){
     //1.split rbuff with \n
     //2.rbuff write
@@ -150,7 +136,7 @@ int read_buff(char* rbuff,int control_mode){
 			break;
 		}
         
-		//process command
+		//TCP 处理数据
 		rec=tcp_process_command(temp_buff);
 		if(rec == 1){
 			continue;
@@ -245,3 +231,173 @@ int initialisation_mc()
 
     return 0;
 }
+
+void tcp_read(LinkQueue *queue,char* recbuf){
+    char* result = NULL;
+    char* sub_result = NULL;
+    int num = 0;
+    char sub_buff_r[100] = "";
+    // char sub_buff_v[100] = "";
+    // char sub_buff_tq[100] = "";
+    // char sub_buff_s[100] = "";
+    char sub_buff[100];
+    char *key,*key_p,*key_v,*key_tq,*key_s;
+    
+    /*insert a queue*/
+    Queue q = (Queue)calloc(1,sizeof(Node));
+    q->Position[0] = ActualPosition1;
+    q->Position[1] = ActualPosition2;
+    q->Position[2] = ActualPosition3;
+    q->Position[3] = ActualPosition4;
+    q->Position[4] = ActualPosition5;
+    q->Position[5] = ActualPosition6;
+
+
+    if (NULL==q){
+        //exit(-1);
+        printf("No memoray to save");
+        return;
+    }
+    strcpy(sub_buff,recbuf);
+    result = strtok_r(sub_buff,delims1,&key);
+    while(result != NULL){
+        switch(*result){
+            //num = 0;
+            case 112:
+                //position
+                strcpy(sub_buff_r,result);
+                //position
+                num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_p);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+
+                        sub_result = substring(sub_result,2,9);
+
+                    }
+
+                    q->Position[num] = (INTEGER32)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_p);
+                    num = num+1 ;
+                }
+                break;
+            case 118:
+                //velocity
+                strcpy(sub_buff_r,result);
+
+                 num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_v);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        printf("sub_result1 = %s\n",sub_result);
+                        sub_result = substring(sub_result,2,9);
+                        printf("sub_result2 = %s\n",sub_result);
+                    }
+
+                    q->Velocity[num] = (INTEGER32)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_v);
+                    num = num+1 ;
+                }           
+                break;
+            case 116:
+                //torque
+                strcpy(sub_buff_r,result);
+                num = 0;
+                sub_result = strtok_r(sub_buff_r,delims2,&key_tq);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        sub_result = substring(sub_result,2,4);
+                    }
+
+                    q->Torque[num] = (INTEGER16)strtol(sub_result,NULL,16); 
+                    sub_result = strtok_r(NULL,delims2,&key_tq);
+                    num = num+1 ;
+                }
+                break;
+            case 115:
+                strcpy(sub_buff_r,result);
+                //newstate = 1;
+
+                num = 0;
+
+                printf("sub_buff_r = %s\n", sub_buff_r);
+                sub_result = strtok_r(sub_buff_r,delims2,&key_s);
+                printf("sub_result = %s\n", sub_result);
+                while((sub_result != NULL)&&(num<6)){
+                    if(num ==0){
+                        sub_result = substring(sub_result,2,2);
+                    }
+                    printf("\nsub_result_s = %s\n",sub_result);
+                    q->OperationMode[num] = (INTEGER8)strtol(sub_result,NULL,16); 
+                    
+                    sub_result = strtok_r(NULL,delims2,&key_s);
+                    num = num+1 ;
+                }
+                break;
+            default :
+                free(q);
+                printf("ERROR MESSAGE!!!\n");
+                return;
+            result = strtok_r(NULL,delims1,&key);
+            
+        }
+      
+
+    //change the queue end
+    q->next = NULL;
+
+    queue ->rear ->next = q;
+    queue -> rear = q;
+    return;
+
+    }
+}
+
+void tcp_write(LinkQueue *queue){
+    int counts = 0;
+    //printf("\nsprintf :%04x  %04x %08x\n",(queue->front->next->Torque[2]&(0xFFFF)),ActualTorque3,queue->front->next->Position[2]);
+    if(!isEmpty(*queue)){
+
+    counts=sprintf(sendbuf,"p[%08x,%08x,%08x,%08x,%08x,%08x];",\
+                queue->front->next->Position[0],queue->front->next->Position[1],\
+                queue->front->next->Position[2],queue->front->next->Position[3],\
+                queue->front->next->Position[4],queue->front->next->Position[5]);
+    
+    counts+=sprintf(sendbuf+counts,"v[%08x,%08x,%08x,%08x,%08x,%08x];",\
+                queue->front->next->Velocity[0],queue->front->next->Velocity[1],\
+                queue->front->next->Velocity[2],queue->front->next->Velocity[3],\
+                queue->front->next->Velocity[4],queue->front->next->Velocity[5]);
+    
+    counts+=sprintf(sendbuf+counts,"t[%04x,%04x,%04x,%04x,%04x,%04x];",\
+                queue->front->next->Torque[0]& (0xFFFF),queue->front->next->Torque[1]&(0xFFFF),\
+                queue->front->next->Torque[2]& (0xFFFF),queue->front->next->Torque[3]&(0xFFFF),\
+                queue->front->next->Torque[4]& (0xFFFF),queue->front->next->Torque[5]&(0xFFFF));
+    
+    counts+=sprintf(sendbuf+counts,"s[%02x,%02x,%02x,%02x,%02x,%02x]\n",\
+                queue->front->next->OperationMode[0]& (0xFF),queue->front->next->OperationMode[1]& (0xFF),\
+                queue->front->next->OperationMode[2]& (0xFF),queue->front->next->OperationMode[3]& (0xFF),\
+                queue->front->next->OperationMode[4]& (0xFF),queue->front->next->OperationMode[5]& (0xFF));
+    }
+    
+}
+
+
+//tcp queue process
+//order mode
+//在程序里的TCP线程的函数，负责队列的收集和发散
+void command_tcp_queue(char* recbuf){
+    //printf("run to here02\n");
+    
+    Enter_queue_Mutex();
+    
+   // 执行与上位机通信操作，读取指令信息
+    tcp_read(&target_queue,recbuf);
+    // 发送传感器信息
+    tcp_write(&actual_queue);  
+    deleteQueue(&actual_queue);
+    
+  
+    Leave_queue_Mutex();
+
+}
+

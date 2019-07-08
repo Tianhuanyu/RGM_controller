@@ -1,2 +1,0 @@
-/usr/bin/ar qc liborocos_uti.a  CMakeFiles/orocos_uti.dir/utility_io.cxx.o CMakeFiles/orocos_uti.dir/utility.cxx.o CMakeFiles/orocos_uti.dir/error_stack.cxx.o CMakeFiles/orocos_uti.dir/svd_eigen_HH.cpp.o CMakeFiles/orocos_uti.dir/svd_HH.cpp.o
-/usr/bin/ranlib liborocos_uti.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc liborocos_model.a  CMakeFiles/orocos_model.dir/ur5.cpp.o CMakeFiles/orocos_model.dir/puma560.cpp.o
-/usr/bin/ranlib liborocos_model.a
