@@ -22,7 +22,7 @@ extern "C"{
 
 #define PORT            2040
 #define BUFFER_SIZE     8001
-#define SERVER_ADDR     "192.168.1.107"
+#define SERVER_ADDR     "192.168.1.106"
 #define GET_ARRAY_LEN(array,len) {len = (sizeof(array) / sizeof(array[0]));}
 
 int stop_process(int control_mode);

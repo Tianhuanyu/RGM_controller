@@ -37,13 +37,6 @@ void Exit(CO_Data* d, UNS32 id)
 
 int Rgm6_Init()
 {
-    // printf("******************************\n");
-    // char* LibraryPath="/home/root/libcanfestival_can_socket.so";
-	// if (LoadCanDriver(LibraryPath) == NULL)
-	// {
-	//     printf("Unable to load library: %s\n",LibraryPath);
-	// 	return -1;
-	// }
 
 	ControlWord = 0x04;
 	OperationMode1 = 0x03;

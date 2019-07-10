@@ -258,6 +258,11 @@ void canopen_queue(void){
     // Target Position  机械臂传感数据保存在队列里的数据在此处执行
     read_queue(&target_queue);
     deleteQueue(&target_queue);
+
+    tcp_write(&actual_queue);  
+    deleteQueue(&actual_queue);
+    
+  
     
     Leave_queue_Mutex();
     

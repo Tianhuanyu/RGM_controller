@@ -205,7 +205,8 @@ static void ConfigureSlaveNode(CO_Data* d, UNS8 nodeId)
 	UNS32 RPDO_COBid;
 	UNS16 TPDO_Index;
 	UNS16 RPDO_Index;
-	// brief : change PDO COB-ID or index with init_index 
+	// brief : change PDO COB-ID or index with init_index
+	//init_index: 上面列表里的遍历值 
 	if (!((init_step[nodeId-2] == 9)&&(init_index[nodeId-2] == 10)))
 	{
 		TPDO_COBid = TPDO_COBID[init_index[nodeId-2]] + nodeId - 0x02;

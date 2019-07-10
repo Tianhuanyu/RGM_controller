@@ -169,7 +169,7 @@ int read_buff(char* rbuff,int control_mode){
 				//printf("run to here01 rec = %d \n",rec);
                 command_tcp_queue(temp_buff);
 				strcpy(temp_buff,"");
-				//printf("run to here0 mode = %d \n",control_mode);
+				printf("run to here0 mode = %d \n",control_mode);
 				break;
 
 			case FEEDBACK_CONTROL:
@@ -355,8 +355,9 @@ void tcp_read(LinkQueue *queue,char* recbuf){
 
 void tcp_write(LinkQueue *queue){
     int counts = 0;
-    //printf("\nsprintf :%04x  %04x %08x\n",(queue->front->next->Torque[2]&(0xFFFF)),ActualTorque3,queue->front->next->Position[2]);
+    //printf("run to here 00\n");
     if(!isEmpty(*queue)){
+    printf("\nsprintf :%08x  %08x \n",(queue->front->next->Velocity[1]),ActualVelocity2);
 
     counts=sprintf(sendbuf,"p[%08x,%08x,%08x,%08x,%08x,%08x];",\
                 queue->front->next->Position[0],queue->front->next->Position[1],\
@@ -387,17 +388,23 @@ void tcp_write(LinkQueue *queue){
 //在程序里的TCP线程的函数，负责队列的收集和发散
 void command_tcp_queue(char* recbuf){
     //printf("run to here02\n");
-    
+    int numt = 0;    
     Enter_queue_Mutex();
     
    // 执行与上位机通信操作，读取指令信息
     tcp_read(&target_queue,recbuf);
     // 发送传感器信息
-    tcp_write(&actual_queue);  
-    deleteQueue(&actual_queue);
-    
-  
+ 
     Leave_queue_Mutex();
+
+    // if((numt=send(sock_fd,sendbuf,strlen(sendbuf),MSG_NOSIGNAL)) < 0){
+    //         printf("ERROR:Fail to send string\n");
+    //         close(sock_fd);
+    //         //exit(1);
+    //         tcp_connected = 0;
+    //         return;
+    //         }
+
 
 }
 

@@ -13,6 +13,7 @@ set(CMAKE_FIND_ROOT_PATH  /home/thy/app/gcc-arm-linux/libc)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+add_definitions("-DNOT_USE_DYNAMIC_LOADING")
 
 
 # Include the header files
@@ -50,12 +51,16 @@ link_libraries(orocos_uti)
 
 
 # root directory
-aux_source_directory(. DIR_SRCS)
-add_executable(kollmorgen ${DIR_SRCS})
-# add_executable(ur5_test ${PROJECT_SOURCE_DIR}/test/model_test.cpp)
+set(KM_DIR_SRCS ./kollmorgen.c)
+add_executable(kollmorgen ${KM_DIR_SRCS})
+
+set(SH_DIR_SRCS ./CANOpenShell.c)
+#add_executable(kmsh ${SH_DIR_SRCS})
+#add_executable(ur5_test ${PROJECT_SOURCE_DIR}/test/model_test.cpp)
 
 # link libaries
-TARGET_LINK_LIBRARIES(kollmorgen canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl)
+TARGET_LINK_LIBRARIES(kollmorgen canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl ftsensor)
+#TARGET_LINK_LIBRARIES(kmsh canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl ftsensor)
 # TARGET_LINK_LIBRARIES(ur5_test orocos_model orocos_src orocos_uti)
 
 
