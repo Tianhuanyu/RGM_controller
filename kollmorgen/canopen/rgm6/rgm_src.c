@@ -6,8 +6,6 @@ LinkQueue target_queue, actual_queue;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int control_mode = 0;
-// const char delims1[] = {";"};
-// const char delims2[] = {","};
 int newstate = 0;
 
 char* substring(char* ch,int pos,int length)  
@@ -58,8 +56,8 @@ bool isEmpty(LinkQueue queue)
 {
     return queue.rear == queue.front ? true:false;
 }
+
 //insert queue (FIFO)
-/*isTarget = 1*/
 void insertQueue6(LinkQueue *queue)
 {
     Queue q = (Queue)calloc(1,sizeof(Node));
@@ -153,15 +151,15 @@ void read_queue(LinkQueue *queue){
             switch(queue->front->next->OperationMode[0]){
                 // mode changed
                 case PROFILE_POSITION_MODE:
-                    //printf("TARGET SET FINISHED!!\n");
-                    //printf("TargetPosition1 before= %d",TargetPosition1);
+                    printf("TARGET SET FINISHED!!\n");
+                    printf("TargetPosition6 before= %d\n",TargetPosition6);
                     TargetPosition1 = ActualPosition1;
                     TargetPosition2 = ActualPosition2;
                     TargetPosition3 = ActualPosition3;
                     TargetPosition4 = ActualPosition4;
                     TargetPosition5 = ActualPosition5;
                     TargetPosition6 = ActualPosition6;
-                    //printf("TargetPosition1 after= %d",TargetPosition1);
+                    printf("TargetPosition6 after= %d\n",TargetPosition6);
                     break;
                 
                 case PROFILE_VELOCITY_MODE:
@@ -261,9 +259,7 @@ void canopen_queue(void){
 
     tcp_write(&actual_queue);  
     deleteQueue(&actual_queue);
-    
-  
-    
+
     Leave_queue_Mutex();
     
     

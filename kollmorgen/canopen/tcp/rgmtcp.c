@@ -327,6 +327,9 @@ void tcp_read(LinkQueue *queue,char* recbuf){
                     if(num ==0){
                         sub_result = substring(sub_result,2,2);
                     }
+                    else if(num == 5){
+                        sub_result[2] = '\0';
+                    }
                     printf("\nsub_result_s = %s\n",sub_result);
                     q->OperationMode[num] = (INTEGER8)strtol(sub_result,NULL,16); 
                     
@@ -357,7 +360,7 @@ void tcp_write(LinkQueue *queue){
     int counts = 0;
     //printf("run to here 00\n");
     if(!isEmpty(*queue)){
-    printf("\nsprintf :%08x  %08x \n",(queue->front->next->Velocity[1]),ActualVelocity2);
+    //printf("\nsprintf :%08x  %08x \n",(queue->front->next->Velocity[1]),ActualVelocity2);
 
     counts=sprintf(sendbuf,"p[%08x,%08x,%08x,%08x,%08x,%08x];",\
                 queue->front->next->Position[0],queue->front->next->Position[1],\

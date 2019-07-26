@@ -2,7 +2,7 @@
 ssh root@192.168.1.233
 
 拷贝
- scp build/kollmorgen root@192.168.1.233:/home/root
+scp build/kollmorgen root@192.168.1.233:/home/root
 
 can 波特率
 canconfig can0 bitrate 1000000

@@ -56,9 +56,7 @@ void TestMaster_initialisation(CO_Data* d)
 {
 	UNS32 RPDO_COBID[7] = {0x80000282, 0x80000292, 0x800002A2, 0x80000212, 0x80000222, 0x80000232, 0x80000242}; 
 	UNS32 TPDO_COBID[7] = {0x80000402, 0x80000412, 0x80000422, 0x80000302, 0x80000452, 0x80000462, 0x80000472};
-	UNS32 size = sizeof(UNS32); 
-	// UNS32 SINC_cicle=0;
-	// UNS8 data_type = 0;	
+	UNS32 size = sizeof(UNS32); 	
 	eprintf("TestMaster_initialisation\n");
 
 	// change tpdo state based on opearation_mode
@@ -105,15 +103,16 @@ void TestMaster_initialisation(CO_Data* d)
 			// {
 			// 	TPDO_COBId |= 0x80000000;
 			// }			
-			if(0x1800 + i*6+j == 0x1806){
-				printf("\nTPDO_COBId = %x\n",TPDO_COBId);
-			}
+			// if(0x1800 + i*6+j == 0x1806){
+			// 	printf("\nTPDO_COBId = %x\n",TPDO_COBId);
+			// }
 			writeLocalDict( &TestMaster_Data, /*CO_Data* d*/
 			0x1800 + i*6+j, /*UNS16 index*/
 			0x01, /*UNS8 subind*/ 
 			&TPDO_COBId, /*void * pSourceData,*/ 
 			&size, /* UNS8 * pExpectedSize*/
 			RW);  /* UNS8 checkAccess */
+			printf("\nTPDO_COBId = %x   %4.4x\n",TPDO_COBId,0x1800 + i*6+j);
 			
 		}
 	}					
@@ -400,13 +399,12 @@ void TestMaster_post_sync(CO_Data* d)
 		case 0 :
 		// 判断机械臂是否在正常工作区域启动
 			if (
-				 (ActualPosition1<0x100000)&&(ActualPosition1>0x0)&&
-				 (ActualPosition2<0x100000)&&(ActualPosition2>0x0)&&
-				(ActualPosition3<0x100000)&&(ActualPosition3>0x0)&&
-				 (ActualPosition4<0x100000)&&(ActualPosition4>0x0)&&
-				 (ActualPosition5<0x100000)&&(ActualPosition5>0x0)&&
-				 (ActualPosition6<0x100000)&&(ActualPosition6>0x0)
-				//(1)
+				 (ActualPosition1<524300)&&(ActualPosition1>0x0)&&
+				 (ActualPosition2<524300)&&(ActualPosition2>0x0)&&
+				(ActualPosition3<524300)&&(ActualPosition3>0x0)&&
+				 (ActualPosition4<524300)&&(ActualPosition4>0x0)&&
+				 (ActualPosition5<524300)&&(ActualPosition5>0x0)&&
+				 (ActualPosition6<524300)&&(ActualPosition6>0x0)
 			)
 			{
 				// EnterMutex();
@@ -422,7 +420,7 @@ void TestMaster_post_sync(CO_Data* d)
 			printf("Master :INITIALIZATION STEP 1 Controlword = SHUTDOWN\n");
 			}
 			else
-			printf("ERROR:WRONG WORK AREA!!!!\n");
+				printf("ERROR:WRONG WORK AREA!!!!\n");
 			break;
 		//启动过程		
 		case 1 :
@@ -444,18 +442,17 @@ void TestMaster_post_sync(CO_Data* d)
 		}
 	
 		canopen_queue();
-		if(count == 100){
-			count = 0;
-			//printf("TargetPosition1,ActualTar = %x,%x\n",TargetPosition1,ActualPosition1);
-			//记录时间函数
-				// gettimeofday(&tv,NULL);
-				// time_last = time_now;
-				// time_now = 1000000*tv.tv_sec+tv.tv_usec;
-				// time_use=time_now-time_last;
-				time_use = time_escape_cal(&tv);
-				printf("time_use = %lld\n",time_use);
+
+		// 一百次进行采样
+		// if(count == 100){
+		// 	count = 0;
+			
+		// 	//记录时间函数
+			
+		// 	//time_use = time_escape_cal(&tv);
+		// 	//printf("time_use = %lld\n",time_use);
 				
-			}
+		// 	}
    			
 
 	
@@ -525,9 +522,14 @@ void TestMaster_post_sync(CO_Data* d)
 		
 }
 
+int iter = 0;
 void TestMaster_post_emcy(CO_Data* d, UNS8 nodeID, UNS16 errCode, UNS8 errReg)
 {
-	eprintf("Master received EMCY message. Node: %2.2x  ErrorCode: %4.4x  ErrorRegister: %2.2x\n", nodeID, errCode, errReg);
+	//iter++;
+	//if (++iter == 1000){
+	//eprintf("Master received EMCY message. Node: %2.2x  ErrorCode: %4.4x  ErrorRegister: %2.2x\n", nodeID, errCode, errReg);
+	//	iter =0; 
+	//	}
 }
 
 char query_result = 0;

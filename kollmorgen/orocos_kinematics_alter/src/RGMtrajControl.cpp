@@ -217,7 +217,7 @@ namespace KDL {
 
     int RGMtrajCtrl::calcuVelocity(int& v1,int& v2,int& v3,int& v4,int& v5,int& v6) {
         
-        const int kp = 0;
+        const int kp = 0.01;
         if(step < max_step){
             JntArray Vel_fb(6);
             int i = 0;
@@ -233,6 +233,10 @@ namespace KDL {
             v4 = (0x15)*(0x3E8)*(int32_t)Vel_fb(3);
             v5 = (0x15)*(0x3E8)*(int32_t)Vel_fb(4);
             v6 = (0x15)*(0x3E8)*(int32_t)Vel_fb(5);
+            // v3 = 0;
+            // v4 = 0;
+            // v5 = 0;
+            // v6 = 0;
 
             
 
