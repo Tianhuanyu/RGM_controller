@@ -1,3 +1,18 @@
+Linux Edit Connection
+
+wired connection1
+IPV4 settings
+address 192.168.1.106
+netmask
+255.255.255.0
+Gateway
+192.168.1.1
+
+save
+
+
+当IP合适时可进行ssh
+
 链接ARM板子
 ssh root@192.168.1.233
 
