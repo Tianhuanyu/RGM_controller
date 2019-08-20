@@ -152,14 +152,14 @@ void read_queue(LinkQueue *queue){
                 // mode changed
                 case PROFILE_POSITION_MODE:
                     printf("TARGET SET FINISHED!!\n");
-                    printf("TargetPosition6 before= %d\n",TargetPosition6);
+                    printf("TargetPosition4 before= %d\n",TargetPosition4);
                     TargetPosition1 = ActualPosition1;
                     TargetPosition2 = ActualPosition2;
                     TargetPosition3 = ActualPosition3;
                     TargetPosition4 = ActualPosition4;
                     TargetPosition5 = ActualPosition5;
                     TargetPosition6 = ActualPosition6;
-                    printf("TargetPosition6 after= %d\n",TargetPosition6);
+                    printf("TargetPosition4 after= %d\n",TargetPosition4);
                     break;
                 
                 case PROFILE_VELOCITY_MODE:

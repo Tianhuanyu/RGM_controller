@@ -79,7 +79,7 @@ int tcp_process_command(char* inputbuf){
 		if(!strncmp(inputbuf,"START",5)){ //receive command Start
             
 			ControlWord = SWITCH_ON;
-			sleep(1);
+			//sleep(1);
 			ControlWord = ENABLE_OPERATION;
 			strcpy(inputbuf,"");
 			printf("COMMAND START!!\n");
@@ -101,6 +101,14 @@ int tcp_process_command(char* inputbuf){
 			pvt_queue_num = 0;
 			init_pvtqueue(&pvt_command_queue);
 			printf("PVT_PREPARE_GET\n");
+                    
+			return 1;
+		}
+        if(!strncmp(inputbuf,"RGM_SDO",11)){
+		
+			ControlWord = ENABLE_OPERATION;
+            printf("RGM_SDO_FUNCTION\n");
+            // read sdo
                     
 			return 1;
 		}

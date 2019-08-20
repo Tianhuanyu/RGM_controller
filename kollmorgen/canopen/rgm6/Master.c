@@ -157,23 +157,23 @@ static void ConfigureSlaveNode(CO_Data* d, UNS8 nodeId)
 	switch(Operation_Mode)
 	{
 		case PROFILE_POSITION_MODE :
-			RPDO_COBID[0] &= ~0x80000000;
-			RPDO_COBID[1] &= ~0x80000000;
-			RPDO_COBID[2] &= ~0x80000000;
-			RPDO_COBID[3] &= ~0x80000000;
+			// RPDO_COBID[0] &= ~0x80000000;
+			// RPDO_COBID[1] &= ~0x80000000;
+			// RPDO_COBID[2] &= ~0x80000000;
+			// RPDO_COBID[3] &= ~0x80000000;
 
 			break;
 		case PROFILE_VELOCITY_MODE :
-			RPDO_COBID[0] &= ~0x80000000;
-			RPDO_COBID[1] &= ~0x80000000;
-			RPDO_COBID[3] &= ~0x80000000;
-			RPDO_COBID[2] &= ~0x80000000;
+			// RPDO_COBID[0] &= ~0x80000000;
+			// RPDO_COBID[1] &= ~0x80000000;
+			// RPDO_COBID[3] &= ~0x80000000;
+			// RPDO_COBID[2] &= ~0x80000000;
 			break;
 		case PROFILE_TORQUE_MODE :
-			RPDO_COBID[0] &= ~0x80000000;
-			RPDO_COBID[1] &= ~0x80000000;
-			RPDO_COBID[2] &= ~0x80000000;
-			RPDO_COBID[3] &= ~0x80000000;
+			// RPDO_COBID[0] &= ~0x80000000;
+			// RPDO_COBID[1] &= ~0x80000000;
+			// RPDO_COBID[2] &= ~0x80000000;
+			// RPDO_COBID[3] &= ~0x80000000;
 			break;
 
 		default :
@@ -187,21 +187,21 @@ static void ConfigureSlaveNode(CO_Data* d, UNS8 nodeId)
 	UNS16 RPDO_Index;
 	// brief : change PDO COB-ID or index with init_index
 	//init_index: 上面列表里的遍历值 
-	if (!(init_index[nodeId-2] == 10))
+	if (!(init_index[nodeId-2] == 10)&&(init_step[nodeId-2]<7))
 	{
 		TPDO_COBid = TPDO_COBID[init_index[nodeId-2]] + nodeId - 0x02;
 		RPDO_COBid = RPDO_COBID[init_index[nodeId-2]] + nodeId - 0x02;
 		TPDO_Index = TPDO_INDEX[init_index[nodeId-2]];
 		RPDO_Index = RPDO_INDEX[init_index[nodeId-2]];
  
-		eprintf("nodeId : %2.2x; init_step: %d; init_index: %d; TPDO_Index: %4.4x; RPDO_Index: %4.4x, TPDO_COBid: %8.8x, RPDO_Index: %8.8x\n", nodeId,
-	 				init_step[nodeId-2],
-					init_index[nodeId-2],
-					TPDO_Index,
-					RPDO_Index,
-					TPDO_COBid,
-					RPDO_COBid
-					);
+		// eprintf("nodeId : %2.2x; init_step: %d; init_index: %d; TPDO_Index: %4.4x; RPDO_Index: %4.4x, TPDO_COBid: %8.8x, RPDO_Index: %8.8x\n", nodeId,
+	 	// 			init_step[nodeId-2],
+		// 			init_index[nodeId-2],
+		// 			TPDO_Index,
+		// 			RPDO_Index,
+		// 			TPDO_COBid,
+		// 			RPDO_COBid
+		// 			);
 	}
 
 	switch(++init_step[nodeId-2])
@@ -238,10 +238,8 @@ static void ConfigureSlaveNode(CO_Data* d, UNS8 nodeId)
 	break;
 	case 3: 
 	{
-		// if (init_index[nodeId-2] <= 4)
-		// {
+		
 		TPDO_COBid &= ~0x80000000;
-		//}
 		eprintf("Master : re-enable or re-disable slave %2.2x TPDO %4.4x TPDO_COBid %x\n", nodeId, TPDO_Index,TPDO_COBid);
 		res = writeNetworkDictCallBack (d, /*CO_Data* d*/
 				nodeId, /*UNS8 nodeId*/
@@ -418,41 +416,51 @@ void TestMaster_post_sync(CO_Data* d)
 
 		//抖动 甩开抱闸
 			case 3 :
-					TargetVelocity1 = 100000;
-					TargetVelocity2 = 100000;
-					TargetVelocity3 = 100000;
-					TargetVelocity4 = 100000;
-					TargetVelocity5 = 100000;
-					TargetVelocity6 = 100000;
+					TargetVelocity1 = 500000;
+					TargetVelocity2 = 500000;
+					TargetVelocity3 = 500000;
+					TargetVelocity4 = 500000;
+					TargetVelocity5 = 500000;
+					TargetVelocity6 = 500000;
 					break;
 			
-			case 20:
-					TargetVelocity1 = -100000;
-					TargetVelocity2 = -100000;
-					TargetVelocity3 = -100000;
-					TargetVelocity4 = -100000;
-					TargetVelocity5 = -100000;
-					TargetVelocity6 = -100000;
+			case 50:
+					TargetVelocity1 = -500000;
+					TargetVelocity2 = -500000;
+					TargetVelocity3 = -500000;
+					TargetVelocity4 = -500000;
+					TargetVelocity5 = -500000;
+					TargetVelocity6 = -500000;
 					break;
-			case 40:
+			case 100:
+					TargetVelocity1 = 500000;
+					TargetVelocity2 = 500000;
+					TargetVelocity3 = 500000;
+					TargetVelocity4 = 500000;
+					TargetVelocity5 = 500000;
+					TargetVelocity6 = 500000;
+	
+					break;
+
+			case 150:
+					TargetVelocity1 = -500000;
+					TargetVelocity2 = -500000;
+					TargetVelocity3 = -500000;
+					TargetVelocity4 = -500000;
+					TargetVelocity5 = -500000;
+					TargetVelocity6 = -500000;
+	
+					break;
+
+			case 200:
 					TargetVelocity1 = 0;
 					TargetVelocity2 = 0;
 					TargetVelocity3 = 0;
 					TargetVelocity4 = 0;
 					TargetVelocity5 = 0;
 					TargetVelocity6 = 0;
-					
-					OperationMode1 = 0x04;
-					//OperationMode2 = 0x04;
-					// OperationMode3 = 0x04;
-					// OperationMode4 = 0x04;
-					
-					TargetTorque1 = 100;
-					// TargetTorque2 = 3000;
-					// TargetTorque3 = 0;
-					// TargetTorque4 = 0;
-					
-					
+					printf("FINISHED!!!\n");
+	
 					break;
 
 			default :
@@ -461,6 +469,7 @@ void TestMaster_post_sync(CO_Data* d)
 		}
 		else{
 					printf("ERROR:WRONG WORK AREA!!!!\n");
+					printf("%d  %d  %d  %d %d %d\n",ActualPosition1,ActualPosition2,ActualPosition3,ActualPosition4,ActualPosition5,ActualPosition6);
 					TargetVelocity1 = 0;
 					TargetVelocity2 = 0;
 					TargetVelocity3 = 0;
@@ -470,20 +479,21 @@ void TestMaster_post_sync(CO_Data* d)
 					return;
 		}
 
-
+	
 		
 		canopen_queue();
 
-		// 一百次进行采样
-		// if(count == 100){
-		// 	count = 0;
+		//一百次进行采样
+		if(count == 100){
+			count = 0;
 			
-		// 	//记录时间函数
+			printf("ActualPosition06 = %d TargetPosition06 = %d \n",ActualPosition6,TargetPosition6);
+			//记录时间函数
 			
-		// 	//time_use = time_escape_cal(&tv);
-		// 	//printf("time_use = %lld\n",time_use);
+			//time_use = time_escape_cal(&tv);
+			//printf("time_use = %lld\n",time_use);
 				
-		// 	}
+			}
    			
 
 	
