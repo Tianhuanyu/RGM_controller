@@ -542,18 +542,18 @@ void TestMaster_post_sync(CO_Data* d)
 				Leave_pvtqueue_Mutex();
 				
 			break;
-			// 反馈控制——拖动部分
-			case FEEDBACK_CONTROL:
-				Enter_pvtqueue_Mutex();
-				rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
-													ActualPosition3,ActualPosition4,
-													ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
-				rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
-											&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
-				rec_state_change = 0;
-				rec_output = 0;
-				Leave_pvtqueue_Mutex();
-			break;
+			// // 反馈控制——拖动部分
+			// case FEEDBACK_CONTROL:
+			// 	Enter_pvtqueue_Mutex();
+			// 	// rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
+			// 	// 									ActualPosition3,ActualPosition4,
+			// 	// 									ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
+			// 	// rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
+			// 	// 							&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
+			// 	// rec_state_change = 0;
+			// 	rec_output = 0;
+			// 	Leave_pvtqueue_Mutex();
+			// break;
 
 			default:
 			break;

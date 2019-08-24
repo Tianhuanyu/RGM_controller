@@ -44,48 +44,47 @@ typedef enum CONTROL_MODE{FRAME_BASE_CONTROL,
 
 typedef struct FRAME{
     float point[3];
-    float orientation[3];
+    float orientation[4];
 } FRAME;
 
 typedef struct TWIST{
     float linear[3];
-    float angular[3];
+    float ft[3];
 } TWIST;
 
 /*Struct for robot hardware interface*/
 
-typedef struct RGM_ROBOT{
+// typedef struct RGM_ROBOT_NODE{
 
-    // /*push to CANopen slave*/
-    // INTEGER32 target_position[6] ={0,0,0,0,0,0};
-    // INTEGER32 target_velocity[6] ={0,0,0,0,0,0};
-    // INTEGER32 target_torque[6] ={0,0,0,0,0,0};
+//     OPERATION_MODE operation_mode;
+//     CONTROL_MODE control_mode;
 
-    // /*pull from CANopen slave*/
-    // INTEGER32 actual_position[6] ={0,0,0,0,0,0};
-    // INTEGER32 actual_velocity[6] ={0,0,0,0,0,0};
-    // INTEGER32 actual_torque[6] ={0,0,0,0,0,0};
+//     /*listen from pc*/
+//     FRAME target_tcp_frame;
+//     TWIST target_tcp_twist;
 
-    OPERATION_MODE operation_mode;
-    CONTROL_MODE control_mode;
+//     /*report to pc*/
+//     FRAME actual_tcp_frame;
+//     TWIST actual_tcp_twist;
 
-    /*listen from pc*/
-    FRAME target_tcp_frame;
-    TWIST target_tcp_twist;
-
-    /*report to pc*/
-    FRAME actual_tcp_frame;
-    TWIST actual_tcp_twist;
+//     struct RGM_ROBOT_NODE *next;
     
-} RGM_ROBOT;
+// } RGM_ROBOT_NODE, *RGM_QUEUE;
 
-RGM_ROBOT* pRGM;
+// typedef struct{
+//     RGM_QUEUE front;
+//     RGM_QUEUE rear;
+// }RGMQueue;
+
 
 typedef struct Node{
     
     INTEGER32 Position[RGM_NUM];
     INTEGER32 Velocity[RGM_NUM];
     INTEGER16 Torque[RGM_NUM];
+    FRAME tcp_frame;
+    TWIST tcp_twist;
+    CONTROL_MODE control_mode;
     INTEGER8 OperationMode[RGM_NUM];
     struct Node *next;
 }Node, *Queue;
@@ -109,6 +108,10 @@ void deleteQueue(LinkQueue *queue);
 void destory_queue(LinkQueue *queue);
 //debug
 void QueuePrint(LinkQueue *queue);
+
+
+
+
 void Enter_queue_Mutex(void);
 void Leave_queue_Mutex(void);
 
@@ -117,6 +120,7 @@ void canopen_queue(void);
 
 
 extern LinkQueue target_queue, actual_queue;
+//RGM_ROBOT_NODE* pRGM;
 extern pthread_mutex_t mutex;
 extern int newstate;
 //depend on mode of control 1=> pvt command

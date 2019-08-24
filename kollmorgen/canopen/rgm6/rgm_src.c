@@ -51,11 +51,18 @@ void initQueue(LinkQueue *queue)
 
     queue->front->next = NULL;
 }
+
+
 //Is the queue empty?
 bool isEmpty(LinkQueue queue)
 {
     return queue.rear == queue.front ? true:false;
 }
+
+// bool isRgmEmpty(RGMQueue* queue)
+// {
+//     return queue.rear == queue.front ? true:false;
+// }
 
 //insert queue (FIFO)
 void insertQueue6(LinkQueue *queue)
@@ -108,9 +115,13 @@ void insertQueue6(LinkQueue *queue)
 
   
 }
+
+
+
+
 void QueuePrint(LinkQueue *queue)
 {
-    int flag = isEmpty(*queue);
+    bool flag = isEmpty(*queue);
     printf("Here %d  %d\n",queue->rear->Position ,flag);
 }
 //delete Queue
@@ -244,6 +255,8 @@ void read_queue(LinkQueue *queue){
     }
  
 }
+
+
 
 //canopen queue process
 //在程序中的canopen队列处理函数，负责把AP AV发送到上位机

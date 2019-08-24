@@ -4,6 +4,7 @@
 #define KDLCHAINFKSOLVERPOS_RGM_HPP
 
 #include "chainfksolver.hpp"
+#include "math.h"
 
 namespace KDL {
 
@@ -14,6 +15,7 @@ namespace KDL {
      *
      * @ingroup KinematicFamily
      */
+
     class ChainFkSolverPos_rgm : public ChainFkSolverPos
     {
     public:
@@ -23,10 +25,24 @@ namespace KDL {
 
         //输入的JntArray 和Frame 在体系框架内
         virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1);
+        //这种方式不能使用，没有集成！！！！
         virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1);
 
     private:
         const Chain chain;
+        const double d1;
+        const double a2;
+        const double a3;
+        const double d4;
+        const double d5;
+        const double d6;
+        const double ZERO_THRESH;
+        const double PI;
+
+        int SIGN(double x);
+        void forward(const double* q, double* T);
+        Frame TransToFrame(double* T);
+
     };
 
 }

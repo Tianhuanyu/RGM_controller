@@ -1,4 +1,5 @@
 #include "pvt_src.h"
+#include <stdlib.h>
 
 // a var
 LinkQueue_pvt pvt_command_queue;

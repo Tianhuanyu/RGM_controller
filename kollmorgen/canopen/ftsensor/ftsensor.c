@@ -69,7 +69,7 @@ int ftsensor_init(const char*hostname)
 
     //TODO 初始化线程
     pthread_t ftsensor_tid;
-    pthread_create(ftsensor_tid,NULL,ftsensor_spin,NULL);
+    pthread_create(&ftsensor_tid,NULL,ftsensor_spin,NULL);
     pthread_join(ftsensor_tid,NULL);
 
 

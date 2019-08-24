@@ -39,15 +39,15 @@ int stop_process(int control_mode){
 				}
 
 			if(control_mode == FEEDBACK_CONTROL){
-					TargetVelocity1 = 0;
-					TargetVelocity2 = 0;
-					TargetVelocity3 = 0;
-					TargetVelocity4 = 0;
-					TargetVelocity5 = 0;
-					TargetVelocity6 = 0;
+					// TargetVelocity1 = 0;
+					// TargetVelocity2 = 0;
+					// TargetVelocity3 = 0;
+					// TargetVelocity4 = 0;
+					// TargetVelocity5 = 0;
+					// TargetVelocity6 = 0;
 
-					rgm_Ctrl_dele_wrap(&handle);
-					free(pRGM);
+					// rgm_Ctrl_dele_wrap(&handle);
+					// free(pRGM);
 					control_mode = COMMAND;
 			}
 			return 1;
@@ -180,19 +180,19 @@ int read_buff(char* rbuff,int control_mode){
 				printf("run to here0 mode = %d \n",control_mode);
 				break;
 
-			case FEEDBACK_CONTROL:
-				if(pRGM == NULL){
-					printf("Error in inialization robot tcp target\n");
-					return -1;
-				}
-				else{
-					//rec = fb_tcp_queue(temp_buff);
-					rec = 0;
-					strcpy(temp_buff,"");
-					if(rec != 0){
-					printf("Error in robot tcp target 222\n");	
-					}
-				}
+			// case FEEDBACK_CONTROL:
+				// if(pRGM == NULL){
+				// 	printf("Error in inialization robot tcp target\n");
+				// 	return -1;
+				// }
+				// else{
+				// 	//rec = fb_tcp_queue(temp_buff);
+				// 	rec = 0;
+				// 	strcpy(temp_buff,"");
+				// 	if(rec != 0){
+				// 	printf("Error in robot tcp target 222\n");	
+				// 	}
+				// }
                 
         }
         //Leave_pvtqueue_Mutex();
@@ -245,9 +245,6 @@ void tcp_read(LinkQueue *queue,char* recbuf){
     char* sub_result = NULL;
     int num = 0;
     char sub_buff_r[100] = "";
-    // char sub_buff_v[100] = "";
-    // char sub_buff_tq[100] = "";
-    // char sub_buff_s[100] = "";
     char sub_buff[100];
     char *key,*key_p,*key_v,*key_tq,*key_s;
     
@@ -404,17 +401,8 @@ void command_tcp_queue(char* recbuf){
     
    // 执行与上位机通信操作，读取指令信息
     tcp_read(&target_queue,recbuf);
-    // 发送传感器信息
- 
-    Leave_queue_Mutex();
 
-    // if((numt=send(sock_fd,sendbuf,strlen(sendbuf),MSG_NOSIGNAL)) < 0){
-    //         printf("ERROR:Fail to send string\n");
-    //         close(sock_fd);
-    //         //exit(1);
-    //         tcp_connected = 0;
-    //         return;
-    //         }
+    Leave_queue_Mutex();
 
 
 }
