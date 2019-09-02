@@ -5,28 +5,30 @@
 #ifdef __cplusplus
 extern "C" {
     #include <stdint.h>
+    #include "pvt_src.h"
         }
-struct Node_pvt{
+// struct Node_pvt{
     
-    int32_t Position[6];
-    int32_t Velocity[6];
-    int16_t  Time;
-    int16_t  Count;
+//     int32_t Position[6];
+//     int32_t Velocity[6];
+//     int16_t  Time;
+//     int16_t  Count;
 
-    struct Node_pvt *next;
-};
-typedef Node_pvt* Queue_pvt;
+//     struct Node_pvt *next;
+// };
+// typedef Node_pvt* Queue_pvt;
 
-struct LinkQueue_pvt{
-    Queue_pvt front;
-    Queue_pvt rear;
-};
+// struct LinkQueue_pvt{
+//     Queue_pvt front;
+//     Queue_pvt rear;
+// };
 
 
 #include "chain.hpp"
 #include <Eigen/Dense>
 #include "RGMcontrol.hpp"
 #include "velocityprofile_rect.hpp"
+#include "chainfksolverpos_rgm.hpp"
 //#include <stdio.h>
 
 namespace KDL{
@@ -126,7 +128,7 @@ namespace KDL{
     */
     JntArray Error_p; 
     };
-};
+}
 
 
 #include <vector>

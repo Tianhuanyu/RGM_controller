@@ -16,6 +16,7 @@ int tcp_connected = 0;
 
 const char delims0[] = "\n";
 int handle = -1;
+int handle_fc = -1;
 
 const char delims1[] = {";"};
 const char delims2[] = {","};
@@ -92,12 +93,33 @@ int tcp_process_command(char* inputbuf){
 			position_sum = ActualPosition1;
 			control_mode = MOTION_PLAN;
 			ControlWord = ENABLE_OPERATION;
-			trajCtrlinit_wrap(&handle,pvt_command_queue,300000);
+			trajCtrlinit_wrap(&handle,pvt_command_queue,500000);
 			return 1; 
         }//"PVT_PREPARE000"
 		if(!strncmp(inputbuf,"PVT_PREPARE",11)){
 		
 			control_mode = MOTION_PREPARE;
+			pvt_queue_num = 0;
+			init_pvtqueue(&pvt_command_queue);
+			printf("PVT_PREPARE_GET\n");
+                    
+			return 1;
+		}
+        // 三次差值 输入末端的7个量最终变换成一条队列
+        if(!strncmp(inputbuf,"FC_START",10)){
+		
+			/*change_1995*/
+			strcpy(inputbuf,"");
+			control_mode = FRAME_TRAJ_CONTROL;
+			ControlWord = ENABLE_OPERATION;
+			// 这里创建一个类，这个类可以执行
+            rgm_sfunc_init_wrap(&handle_fc,pvt_command_queue);
+			return 1; 
+		}
+        // 
+        if(!strncmp(inputbuf,"FC_PREPARE",8)){
+		
+			control_mode = FRAME_CONTROL_PREPARE;
 			pvt_queue_num = 0;
 			init_pvtqueue(&pvt_command_queue);
 			printf("PVT_PREPARE_GET\n");
@@ -151,16 +173,28 @@ int read_buff(char* rbuff,int control_mode){
 		}
 		else if(rec == 2){
 			//strcpy(rbuff,"");
-			printf("SHUTDOWN 123456\n");
+			printf("SHUTDOWN\n");
 			return 2;
 		}
 		printf("result,control_mode,isEmpty= %d,%d.%d\n",rec,control_mode,isEmpty(target_queue));
 		//process_data
-		printf("\nrun to here0 mode = %d \n\n",control_mode);
+		//printf("\nrun to here0 mode = %d \n\n",control_mode);
 		//切换控制方式
 		switch(control_mode)
         {
             case MOTION_PREPARE:
+                if (rec=insert_pvt_queue(&pvt_command_queue,&pvt_queue_num,temp_buff) < 0){
+                    
+                printf("error in insert_pvt_queue function\n");
+                return -1; 
+                }
+                if( rec == 0 ){
+                    pvt_queue_num++;
+					strcpy(temp_buff,"");
+                }
+				break;
+
+            case FRAME_CONTROL_PREPARE:
                 if (rec=insert_pvt_queue(&pvt_command_queue,&pvt_queue_num,temp_buff) < 0){
                     
                 printf("error in insert_pvt_queue function\n");
@@ -180,19 +214,6 @@ int read_buff(char* rbuff,int control_mode){
 				printf("run to here0 mode = %d \n",control_mode);
 				break;
 
-			// case FEEDBACK_CONTROL:
-				// if(pRGM == NULL){
-				// 	printf("Error in inialization robot tcp target\n");
-				// 	return -1;
-				// }
-				// else{
-				// 	//rec = fb_tcp_queue(temp_buff);
-				// 	rec = 0;
-				// 	strcpy(temp_buff,"");
-				// 	if(rec != 0){
-				// 	printf("Error in robot tcp target 222\n");	
-				// 	}
-				// }
                 
         }
         //Leave_pvtqueue_Mutex();

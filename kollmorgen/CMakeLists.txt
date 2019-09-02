@@ -5,15 +5,15 @@ cmake_minimum_required(VERSION 2.8)
 project(kollmorgen)
 
 # cross compiling
-# set(cmake_system_name Linux)
-# set(CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
-# set(CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
-# set(CMAKE_FIND_ROOT_PATH  /home/thy/app/gcc-arm-linux/libc)
+set(cmake_system_name Linux)
+set(CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
+set(CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
+set(CMAKE_FIND_ROOT_PATH  /home/thy/app/gcc-arm-linux/libc)
 
-# set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-# set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-# add_definitions("-DNOT_USE_DYNAMIC_LOADING")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+add_definitions("-DNOT_USE_DYNAMIC_LOADING")
 
 
 # Include the header files
@@ -58,12 +58,12 @@ set(SH_DIR_SRCS ./CANOpenShell.c)
 #add_executable(kmsh ${SH_DIR_SRCS})
 #add_executable(ur5_test ${PROJECT_SOURCE_DIR}/test/model_test.cpp)
 
-set(sfunctest_src ${PROJECT_SOURCE_DIR}/test/sfunctest.cpp)
-add_executable(sfunctest ${sfunctest_src})
+# set(sfunctest_src ${PROJECT_SOURCE_DIR}/test/sfunctest.cpp)
+# add_executable(sfunctest ${sfunctest_src})
 
 # link libaries
 TARGET_LINK_LIBRARIES(kollmorgen canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl ftsensor)
-TARGET_LINK_LIBRARIES(sfunctest canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl ftsensor)
+#TARGET_LINK_LIBRARIES(sfunctest  orocos_model orocos_src orocos_uti rt dl ftsensor)
 #TARGET_LINK_LIBRARIES(kmsh canfestival canfestival_unix canfestival_unix_socket rgm6 tcp orocos_model orocos_src orocos_uti rt dl ftsensor)
 # TARGET_LINK_LIBRARIES(ur5_test orocos_model orocos_src orocos_uti)
 

@@ -22,6 +22,8 @@
 
 #include "chainfksolverpos_rgm.hpp"
 #include <iostream>
+#include "models.hpp"
+#include <cstdlib>
 
 namespace KDL {
 
@@ -103,6 +105,33 @@ namespace KDL {
     ChainFkSolverPos_rgm::~ChainFkSolverPos_rgm()
     {
     }
+
+
+}
+
+KDL::Chain ur5 = KDL::universal_robot5();
+static KDL::ChainFkSolverPos_rgm chainrgm_fk_instance = KDL::ChainFkSolverPos_rgm(ur5);
+int chainFk_rgm(int32_t ap1,int32_t ap2,int32_t ap3,int32_t ap4,int32_t ap5,int32_t ap6){
+    KDL::JntArray q(6);
+    q(5) = (ap1  -AP1ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q(4) = (ap2  -AP2ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q(3) = (-ap3 +AP3ZERO)/DRIVER_COUNT*2.0*M_PI +M_PI;
+    q(2) = (ap4  -AP4ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q(1) = (-ap5 +AP5ZERO)/DRIVER_COUNT*2.0*M_PI +M_PI;
+    q(0) = (ap6  -AP6ZERO)/DRIVER_COUNT*2.0*M_PI ;
+
+    std::cout<<q(5)<<" "<<q(4)<<" "<<q(3)<<" "<<q(2)<<" "<<q(1)<<" "<<q(0)<<" "<<std::endl;
+
+    KDL::Frame T;
+    chainrgm_fk_instance.JntToCart(q,T,6);
+    std::cout<<T.p.x()<<" "<<T.p.y()<<" "<<T.p.z()<< std::endl;
+    double wx = 0;
+    double wy = 0;
+    double wz = 0;
+    double wq = 0;
+    T.M.GetQuaternion(wx,wy,wz,wq);
+
+    //std::cout<<wx<<" "<<wy<<" "<<wz<<" "<<wq<< std::endl;
 
 
 }

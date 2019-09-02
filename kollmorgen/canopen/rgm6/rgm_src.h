@@ -16,9 +16,8 @@ extern "C" {
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
-//#include "rgmtcp.h"
 #include "Master.h"
-#include "pvt_src.h"
+//#include "pvt_src.h"
 
 #define TARGET 1
 #define ACTUAL 0
@@ -32,6 +31,8 @@ extern "C" {
 #define MOTION_PREPARE 1
 #define MOTION_PLAN 2
 #define FEEDBACK_CONTROL 4
+#define FRAME_CONTROL_PREPARE 5
+#define FRAME_TRAJ_CONTROL 6
 
 typedef enum OPERATION_MODE{POSITION_MODE,
                     VELOCITY_MODE,
@@ -43,7 +44,7 @@ typedef enum CONTROL_MODE{FRAME_BASE_CONTROL,
 
 
 typedef struct FRAME{
-    float point[3];
+    float pos[3];
     float orientation[4];
 } FRAME;
 
@@ -51,30 +52,6 @@ typedef struct TWIST{
     float linear[3];
     float ft[3];
 } TWIST;
-
-/*Struct for robot hardware interface*/
-
-// typedef struct RGM_ROBOT_NODE{
-
-//     OPERATION_MODE operation_mode;
-//     CONTROL_MODE control_mode;
-
-//     /*listen from pc*/
-//     FRAME target_tcp_frame;
-//     TWIST target_tcp_twist;
-
-//     /*report to pc*/
-//     FRAME actual_tcp_frame;
-//     TWIST actual_tcp_twist;
-
-//     struct RGM_ROBOT_NODE *next;
-    
-// } RGM_ROBOT_NODE, *RGM_QUEUE;
-
-// typedef struct{
-//     RGM_QUEUE front;
-//     RGM_QUEUE rear;
-// }RGMQueue;
 
 
 typedef struct Node{

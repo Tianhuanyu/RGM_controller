@@ -24,7 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Master.h"
 #include "rgm6.h"
 #include "rgmtcp.h"
-#include "RGMikControl.hpp"
+// #include "RGMikControl.hpp"
+#include "pvt_src.h"
+#include "chainfksolverpos_rgm.hpp"
+
+
+
 
 extern s_BOARD MasterBoard;
 int isinit = 0;
@@ -367,8 +372,16 @@ void TestMaster_stopped(CO_Data* d)
 
 
 int rec_output = 0;
+int frame_traj = 0;
+double ttime_ftc = 0.0;
 int display = 0;
 int rec_state_change = 0;
+int32_t tppp1=0;
+int32_t tppp2=0;
+int32_t tppp3=0;
+int32_t tppp4=0;
+int32_t tppp5=0;
+int32_t tppp6=0;
 void TestMaster_post_sync(CO_Data* d)
 {
 	count++;
@@ -462,6 +475,7 @@ void TestMaster_post_sync(CO_Data* d)
 					printf("FINISHED!!!\n");
 	
 					break;
+		
 
 			default :
 				break;
@@ -486,8 +500,8 @@ void TestMaster_post_sync(CO_Data* d)
 		//一百次进行采样
 		if(count == 100){
 			count = 0;
-			
-			printf("ActualPosition06 = %d TargetPosition06 = %d \n",ActualPosition6,TargetPosition6);
+			//chainFk_rgm(ActualPosition1,ActualPosition2,ActualPosition3,ActualPosition4,ActualPosition5,ActualPosition6);
+			//printf("ActualPosition06 = %d TargetPosition06 = %d \n",ActualPosition6,TargetPosition6);
 			//记录时间函数
 			
 			//time_use = time_escape_cal(&tv);
@@ -509,7 +523,6 @@ void TestMaster_post_sync(CO_Data* d)
 				rec_output = calcuVelocity_wrap(handle,&TargetVelocity1,&TargetVelocity2,
 													&TargetVelocity3,&TargetVelocity4,
 													&TargetVelocity5,&TargetVelocity6);
-
 						
 				switch(rec_output){
 					case 0 :
@@ -543,17 +556,28 @@ void TestMaster_post_sync(CO_Data* d)
 				
 			break;
 			// // 反馈控制——拖动部分
-			// case FEEDBACK_CONTROL:
-			// 	Enter_pvtqueue_Mutex();
-			// 	// rec_state_change = get_pos_ik_wrap(handle,ActualPosition1,ActualPosition2,
-			// 	// 									ActualPosition3,ActualPosition4,
-			// 	// 									ActualPosition5,ActualPosition6,pRGM->target_tcp_frame);
-			// 	// rec_output = calcuVelocity_wrap_ctrl(handle,&TargetVelocity1,&TargetVelocity2,&TargetVelocity3,
-			// 	// 							&TargetVelocity4,&TargetVelocity5,&TargetVelocity6);
-			// 	// rec_state_change = 0;
-			// 	rec_output = 0;
-			// 	Leave_pvtqueue_Mutex();
-			// break;
+			case FRAME_TRAJ_CONTROL:
+				Enter_pvtqueue_Mutex();
+				
+
+				frame_traj++;
+				ttime_ftc = frame_traj*5.0;
+				rec_output = calculate_cube_q_wrap(handle_fc,ttime_ftc,tppp1,tppp2,tppp3,tppp4,tppp5,tppp6);
+				switch(rec_output){
+					case 0:
+						break;
+
+					default:
+						rgm_fCtrl_dele_wrap(&handle_fc);
+						destory_pvt_queue(&pvt_command_queue);
+						rec_output=-1;
+						control_mode = COMMAND;
+						frame_traj = 0;
+					
+				}
+				//
+				Leave_pvtqueue_Mutex();
+			break;
 
 			default:
 			break;
@@ -566,11 +590,11 @@ void TestMaster_post_sync(CO_Data* d)
 int iter = 0;
 void TestMaster_post_emcy(CO_Data* d, UNS8 nodeID, UNS16 errCode, UNS8 errReg)
 {
-	iter++;
-	if (++iter == 1000){
-	eprintf("Master received EMCY message. Node: %2.2x  ErrorCode: %4.4x  ErrorRegister: %2.2x\n", nodeID, errCode, errReg);
-		iter =0; 
-		}
+	// iter++;
+	// if (++iter == 1000){
+	// eprintf("Master received EMCY message. Node: %2.2x  ErrorCode: %4.4x  ErrorRegister: %2.2x\n", nodeID, errCode, errReg);
+	// 	iter =0; 
+	// 	}
 }
 
 char query_result = 0;

@@ -18,10 +18,21 @@ extern "C" {
 #include <errno.h>
 #include "rgm_src.h"
 
+#define AP1ZERO 76744
+#define AP2ZERO 265504
+#define AP3ZERO 251134
+#define AP4ZERO 270630
+#define AP5ZERO 256535.0
+#define AP6ZERO 92958.0
+#define DRIVER_COUNT 524288.00
+
 typedef struct Nodepvt{
     
     INTEGER32 Position[6];
     INTEGER32 Velocity[6];
+    FRAME tcp_frame;
+    TWIST tcp_twist;
+    CONTROL_MODE control_mode;
     INTEGER16  Time;
     INTEGER16  Count;
 
@@ -36,6 +47,7 @@ typedef struct{
 
 //#include "ptmode.hpp"
 #include "RGMtrajControl.hpp"
+// #include "chainfksolverpos_rgm.hpp"
 
 void Enter_pvtqueue_Mutex(void);
 
@@ -50,6 +62,7 @@ bool is_empty(LinkQueue_pvt queue);
 int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf);
 
 //int read_pvt_queue(LinkQueue_pvt *queue,int* step);
+void deletepvtQueue(LinkQueue_pvt *queue);
 
 void delete_pvt_queue(LinkQueue_pvt *queue);
 

@@ -48,6 +48,7 @@ extern struct sockaddr_in server_addr;
 extern char receivebuf[BUFFER_SIZE];           // Receive buffer  
 extern char sendbuf[BUFFER_SIZE];              // Send buffer
 extern int handle;
+extern int handle_fc;
 
 #ifdef __cpluscplus
 }

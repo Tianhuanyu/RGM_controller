@@ -1,6 +1,7 @@
 
 #include "chainsfunc.hpp"
 #include <Eigen/LU>
+#include "models.hpp"
 
 namespace KDL{
 
@@ -183,4 +184,97 @@ Jointsfunc::Jointsfunc(const std::vector<Eigen::Vector2d> input_point):
 
 
 
+}
+
+void rgm_sfunc_init_wrap(int* handle,LinkQueue_pvt* pQueue,int32_t ap1,int32_t ap2,int32_t ap3,int32_t ap4,int32_t ap5,int32_t ap6){
+     
+    //chainsfunc* p =NULL;
+    std::vector<KDL::Frame> vc_frames;
+    std::vector<double> vc_times;
+    KDL::Frame frame_temp;
+    double x=0;
+    double y=0;
+    double z=0;
+
+    double qx=0;
+    double qy=0;
+    double qz=0;
+    double qw=0;
+
+    while(pQueue->front!=NULL){
+        //读取队头
+        x = pQueue->front->tcp_frame.pos[0];
+        y = pQueue->front->tcp_frame.pos[1];
+        z = pQueue->front->tcp_frame.pos[2];
+        //读取四元数
+        qx = pQueue->front->tcp_frame.orientation[0];
+        qy = pQueue->front->tcp_frame.orientation[1];
+        qz = pQueue->front->tcp_frame.orientation[2];
+        qw = pQueue->front->tcp_frame.orientation[3];
+
+        //数据转换为KDL Frame形式，并进入队列
+        KDL::Rotation r;
+        r = r.Quaternion(qx,qy,qz,qw);
+       vc_frames.push_back(KDL::Frame(r,KDL::Vector(x,y,z)));
+       vc_times.push_back((double)(pQueue->front->Time*1.0));
+        
+
+        //读完去掉队头
+        deletepvtQueue(pQueue);
+    }
+
+     
+
+    //KDL::chainsfunc(vc_frames,vc_times)
+    KDL::JntArray q_init(6);
+    // q_init(5) = (double)(ap1  -AP1ZERO)/DRIVER_COUNT;
+    // q_init(4) = (double)(ap2  -AP2ZERO)/DRIVER_COUNT;
+    // q_init(3) = (double)(-ap3 +AP3ZERO)/DRIVER_COUNT;
+    // q_init(2) = (double)(ap4  -AP4ZERO)/DRIVER_COUNT;
+    // q_init(1) = (double)(-ap5 +AP5ZERO)/DRIVER_COUNT;
+    // q_init(0) = (double)(ap6  -AP6ZERO)/DRIVER_COUNT;
+
+    q_init(5) = (ap1  -AP1ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q_init(4) = (ap2  -AP2ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q_init(3) = (-ap3 +AP3ZERO)/DRIVER_COUNT*2.0*M_PI +M_PI;
+    q_init(2) = (ap4  -AP4ZERO)/DRIVER_COUNT*2.0*M_PI ;
+    q_init(1) = (-ap5 +AP5ZERO)/DRIVER_COUNT*2.0*M_PI +M_PI;
+    q_init(0) = (ap6  -AP6ZERO)/DRIVER_COUNT*2.0*M_PI ;
+
+    chainsfunc * p = NULL;
+    KDL::Chain ur5 = KDL::universal_robot5();
+    p = new chainsfunc(ur5,vc_frames,vc_times,q_init);
+    
+    chainsfunc_vector.push_back(p);
+    
+    *handle = 0;
+
+}
+
+int calculate_cube_q_wrap(int handle,const double ttime, int* Tp1, int* Tp2, int* Tp3, int* Tp4, int* Tp5, int* Tp6){
+    double time_start =chainsfunc_vector[handle]->_times.front();
+    double time_end =chainsfunc_vector[handle]->_times.back();
+    
+    if((ttime<=time_end)&&(time_start<= ttime )){
+
+        KDL::JntArray q_output=chainsfunc_vector[handle]->calculate_cube_q(ttime);
+        *Tp6 = (int)(AP6ZERO+ q_output(0)      *DRIVER_COUNT/(2.0*M_PI));
+        *Tp5 = (int)(AP5ZERO-(q_output(1)-M_PI)*DRIVER_COUNT/(2.0*M_PI));
+        *Tp4 = (int)(AP4ZERO+ q_output(2)      *DRIVER_COUNT/(2.0*M_PI));
+        *Tp3 = (int)(AP3ZERO-(q_output(3)-M_PI)*DRIVER_COUNT/(2.0*M_PI));
+        *Tp2 = (int)(AP2ZERO+ q_output(4)      *DRIVER_COUNT/(2.0*M_PI));
+        *Tp1 = (int)(AP1ZERO+ q_output(5)      *DRIVER_COUNT/(2.0*M_PI));
+            return 0;
+    }
+    else{
+        std::cout<<"Exceed Time Queue! Return."<<std::endl;
+        return -1;
+    }
+    
+}
+
+
+void rgm_fCtrl_dele_wrap(int* handle){
+    chainsfunc_vector.clear();
+    *handle = -1;
 }

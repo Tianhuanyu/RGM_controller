@@ -19,13 +19,7 @@ int pvt_count = 0;
 int num_add_pvt = 15;
 
 INTEGER32 v_temp[6] = {0,0,0,0,0,0};
-Node_pvt pvt_memory = {
-	{0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    0,
-    0,
-    NULL
-};
+
 
 void Enter_pvtqueue_Mutex(void)
 {
@@ -61,6 +55,20 @@ bool is_empty(LinkQueue_pvt queue)
     return queue.rear == queue.front ? true:false;
 }
 
+void deletepvtQueue(LinkQueue_pvt *queue)
+{
+    Queue q = NULL;
+    if(!is_empty(*queue)){
+        q = queue->front->next;
+        queue->front->next = q->next;
+
+        if (queue->rear == q){
+            queue->rear = queue->front;
+        }
+        free(q);
+    }
+}
+
 void destory_pvt_queue(LinkQueue_pvt *queue)
 {
     while (queue->front != NULL){
@@ -72,7 +80,8 @@ void destory_pvt_queue(LinkQueue_pvt *queue)
     puts("Success in destory!");
 }
 
-//read (sub)receive buff and insert pvt queue 
+//read (sub)receive buff and insert pvt queue
+//两种模式进行了复用 
 int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
 {
     // const sub_receivebuf_long
@@ -119,9 +128,39 @@ int insert_pvt_queue(LinkQueue_pvt *queue,int* count,char* sub_receivebuf)
                     sub_result = strtok_r(NULL,delims02,&keyp);
                     num = num+1 ;
                 }
-
-
                 break;
+
+            //e 代表末端位置 也就是frame
+            case 0x65:
+                //position
+                num = 0;
+                strcpy(sub_buff_r,result);
+                printf("sub_buff = %s\n",sub_buff_r);
+
+                sub_result = strtok_r(sub_buff_r,delims02,&keyp);
+                while((sub_result != NULL)&&(num<7)){
+                    //去掉那个括号和符号
+                    if(num ==0){
+                        //printf("sub_result1 = %s\n",sub_result);
+                        sub_result = substring(sub_result,2,9);
+                    }
+                    if(num<3){
+
+                        q->tcp_frame.pos[num] = atof(sub_result);
+                        printf("Position[%d] = %f\n",num,q->Position[num]); 
+                        sub_result = strtok_r(NULL,delims02,&keyp);
+                    }
+                    else{
+                        q->tcp_frame.orientation[num] = atof(sub_result);
+                        printf("Position[%d] = %f\n",num,q->Position[num]); 
+                        sub_result = strtok_r(NULL,delims02,&keyp);
+                    }
+                    num = num+1 ;
+                }
+       
+            break;
+
+
             case 86:
                 //velocity
                 strcpy(sub_buff_r,result);           

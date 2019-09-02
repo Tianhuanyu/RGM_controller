@@ -233,13 +233,7 @@ namespace KDL {
             v4 = (0x15)*(0x3E8)*(int32_t)Vel_fb(3);
             v5 = (0x15)*(0x3E8)*(int32_t)Vel_fb(4);
             v6 = (0x15)*(0x3E8)*(int32_t)Vel_fb(5);
-            // v3 = 0;
-            // v4 = 0;
-            // v5 = 0;
-            // v6 = 0;
-
             
-
             return 0; 
         }
         else{
@@ -286,13 +280,12 @@ namespace KDL {
     */
 
 void trajCtrlinit_wrap(int* handle,LinkQueue_pvt pQueue,int _max_vel){
-    //KDL::RGMtrajCtrl trajSolver(pQueue,_max_vel);
-    //return p->RGMtrajCtrl(pQueue,_max_vel);
+    
     RGMtrajCtrl * p = NULL;
     p = new RGMtrajCtrl(pQueue,_max_vel);
     
     RGMtrajCtrl_Vector.push_back(p);
-    //RGMtrajCtrl_Vector[0]->RGMtrajCtrl(pQueue,_max_vel);
+    
 
     *handle = 0;
 

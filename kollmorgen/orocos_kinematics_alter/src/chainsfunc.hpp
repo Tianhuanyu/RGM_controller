@@ -6,6 +6,8 @@
 #ifndef KDL_SFUNCCUBE_HPP
 #define KDL_SFUNCCUBE_HPP
 
+
+
 #include "frames.hpp"
 
 #include <vector>
@@ -13,6 +15,10 @@
 #include <Eigen/Core>
 #include "chain.hpp"
 #include "chainiksolverpos_rgm.hpp"
+#include "RGMtrajControl.hpp"
+
+
+
 
 namespace KDL
 {
@@ -39,6 +45,7 @@ namespace KDL
             chainsfunc(const KDL::Chain& chain ,const std::vector<KDL::Frame> frames,const std::vector<double> times,const KDL::JntArray& q_init);
             JntArray calculate_cube_q(const double ttime);
             ~chainsfunc();
+            std::vector<double> _times;
 
         
         private:
@@ -59,7 +66,6 @@ namespace KDL
             Jointsfunc* jc6;
             std::vector<KDL::Frame> _frames;
             int vector_count;
-            std::vector<double> _times;
 
             
             ChainIkSolverPos_rgm iksolver;
@@ -68,20 +74,24 @@ namespace KDL
 
 }
 
+typedef KDL::chainsfunc chainsfunc;
+
+static std::vector<chainsfunc *> chainsfunc_vector;
 
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-void rgm_sfunc_init_wrap(const std::vector<KDL::Frame> frames,const std::vector<double> times,const KDL::JntArray& q_init);
 
-int calculate_cube_q_wrap(const double ttime, int* Tp1, int* Tp2, int* Tp3, int* Tp4, int* Tp5, int* Tp6);
+void rgm_sfunc_init_wrap(int* handle,LinkQueue_pvt* pQueue,int32_t ap1,int32_t ap2,int32_t ap3,int32_t ap4,int32_t ap5,int32_t ap6);
 
-void rgm_Ctrl_dele_wrap(int* handle);
+int calculate_cube_q_wrap(int handle,const double ttime, int* Tp1, int* Tp2, int* Tp3, int* Tp4, int* Tp5, int* Tp6);
+
+void rgm_fCtrl_dele_wrap(int* handle);
 
 #ifdef __cplusplus
-}
+} 
 #endif
 
 #endif
